@@ -47,7 +47,4 @@
   (test-request server :get "/saldo/4")
 
   (test-post server :post "/deposito/2" :body "100.99")
-
-  (def a (atom (atom 1)))
-  @@a
 )
