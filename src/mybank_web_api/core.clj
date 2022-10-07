@@ -72,4 +72,7 @@
   (test-request server :get "/saldo/4")
   (test-post server :post "/deposito/1" "199.93")
   (test-post server :post "/deposito/4" "325.99")
+
+  ;curl http://localhost:9999/saldo/1
+  ;curl -d "199.99" -X POST http://localhost:9999/deposito/1
   )
