@@ -5,7 +5,7 @@
             [clojure.pprint :as pp])
   (:gen-class))
 
-(def contas (atom {:1 {:saldo 100}
+(defonce contas (atom {:1 {:saldo 100}
                    :2 {:saldo 200}
                    :3 {:saldo 300}}))
 
@@ -32,22 +32,23 @@
      ::http/port   8890
      ::http/join?  false}))
 
-(def server (atom nil))
+(defonce server (atom nil))
 
 (defn start []
   (reset! server (http/start (create-server))))
 
 (defn test-request [server verb url]
   (test-http/response-for (::http/service-fn @server) verb url))
-(defn test-post [server verb url options]
-  (test-http/response-for (::http/service-fn @server) verb url options))
+(defn test-post [server verb url body]
+  (test-http/response-for (::http/service-fn @server) verb url :body body))
 (comment
   (start)
+  (http/stop @server)
 
   (test-request server :get "/saldo/1")
   (test-request server :get "/saldo/2")
   (test-request server :get "/saldo/3")
   (test-request server :get "/saldo/4")
 
-  (test-post server :post "/deposito/2" :body "100.99")
+  (test-post server :post "/deposito/2" "863.99")
 )
