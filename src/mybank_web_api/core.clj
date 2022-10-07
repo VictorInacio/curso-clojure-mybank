@@ -31,6 +31,9 @@
      ::http/type   :jetty
      ::http/port   8890
      ::http/join?  false}))
+
+(def server (atom nil))
+
 (defn start []
   (reset! server (http/start (create-server))))
 
