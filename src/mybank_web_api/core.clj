@@ -44,7 +44,7 @@
 (comment
   (start)
 
-  (test-request server :post "/saldo/1")
+  (test-request server :get "/saldo/1")
   (test-request server :get "/saldo/2")
   (test-request server :get "/saldo/3")
   (test-request server :get "/saldo/4")
