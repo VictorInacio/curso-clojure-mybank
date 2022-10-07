@@ -7,7 +7,8 @@
                  [io.pedestal/pedestal.service "0.5.10"]
                  [io.pedestal/pedestal.route "0.5.10"]
                  [io.pedestal/pedestal.jetty "0.5.10"]
-                 [org.slf4j/slf4j-simple "1.7.28"]]
+                 [org.slf4j/slf4j-simple "1.7.28"]
+                 [clj-http "3.12.1"]]
   :main ^:skip-aot mybank-web-api.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot      :all
