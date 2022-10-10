@@ -21,7 +21,7 @@
    :body "Hello!"})
 
 (defn add-contas-atom [context]
-  (update context :request assoc :contas contas-))
+  (assoc context :contas contas-))
 
 (def contas-interceptor
   {:name  :contas-interceptor

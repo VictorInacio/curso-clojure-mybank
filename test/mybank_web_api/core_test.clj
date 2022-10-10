@@ -93,6 +93,8 @@
 
 
 (comment
+  (def resp (test-request server :get "/saldo/1"))
+  (:body resp)
   (run-tests)
   (macroexpand '(are [x y] (= x y)
                            2 (+ 1 1)
@@ -128,8 +130,9 @@
   ;curl -d "199.99" -X POST http://localhost:9999/deposito/1
 
 
-  (chain/execute {:title "Titulo"} [widget-finder])
-  (chain/execute {:title "Titulo"} [widget-finder widget-renderer])
+  (chain/execute {:title "Titulo"} [contas-interceptorwidget-finder])
+  ;(http/default-interceptors [])
+  (chain/execute {:title "Titulo"} [(i/interceptor contas-interceptor) widget-finder widget-renderer])
   (chain/execute {:title "Titulo"} [widget-renderer])
   {:title    "Titulo",
    :widget   {:id 1, :title "Titulo"},
