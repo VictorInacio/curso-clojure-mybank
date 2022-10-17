@@ -1,8 +1,9 @@
 (ns mybank-web-api.interceptors
-  (:require [mybank-web-api.db :as db]
-            [io.pedestal.interceptor :as i]
+  (:require [io.pedestal.interceptor :as i]
             [clojure.data.json :as json]
             [clojure.pprint :as pp]))
+
+(def debug (atom true))
 
 ;; Cria funções p/ facilitar o retorno
 (defn response
@@ -20,10 +21,17 @@
   {:name ::echo
    :enter #(assoc % :response (ok (:request %)))})
 
+(defn print-when-debug
+  "Loga `COISAS` caso o atomo `DEBUG` esteja como `TRUE`.
+  `COISAS` deve ser qualquer objeto aceito pela função `PRINTLN`"
+  [& coisas]
+  (when @debug
+    (apply println "[LOG] " coisas)))
+
 (defn print-n-continue
   "Logs the context and return the same."
   [context]
-  (println "LOG: " context)
+  (print-when-debug context)
   context)
 
 (def print-n-continue-int
@@ -46,7 +54,7 @@
 (defn carrega-contas
   "Função de roteamento que carrega as contas ao contexto."
   [context]
-  (println "Carregando contas ao contexto!!")
+  (print-when-debug "Carregando contas ao contexto.")
   (assoc context :contas db/contas-))
 
 (def carrega-contas-interceptor
@@ -118,7 +126,9 @@
   (i/interceptor {:name ::coerce-body
                   :leave
                   (fn [context]
-                    (println "Forçando body a se adaptar ao Content-Type..." context)
+                    (print-when-debug
+                     "Forçando body a se adaptar ao Content-Type..."
+                     context)
                     (if (get-in
                          context
                          [:response :headers "Content-Type"])
