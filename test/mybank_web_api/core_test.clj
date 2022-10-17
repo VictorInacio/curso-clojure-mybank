@@ -23,14 +23,16 @@
 (defn test-json-post [server verb url body]
   (test-http/response-for (::http/service-fn @server)
                           verb url
-                          :headers {:Content-Type "application/json"} :body body))
+                          :headers {"Content-Type" "application/json"} :body body))
 
 (deftest are-req
   (testing "Multiple get resp"
-    (are [a b] (= (-> (test-request server :get a)
-                      :body) b)
+    (are [a b] (is (let [_ (start)
+                          resp (= (-> (test-request server :get a) :body) b)
+                          _ (http/stop @server)]
+                      resp))
       "/hello" "Hello!"
-      "/contas" "(:1 :2 :3)"
+      "/contas" "{:1 {:saldo 100}, :2 {:saldo 200}, :3 {:saldo 300}}"
       "/saldo/1" "{:saldo 100}"
       "/saldo/2" "{:saldo 200}"
       "/saldo/3" "{:saldo 300}")))
@@ -71,7 +73,7 @@
   (test-request server :get "/echo")
 
   ;; 2. testes com parametros e body-params
-  (test-request server :get "/body-params")
+  (test-json-post server :post "/body-params" "{\"msg\":\"foo\"}")
   (test-request server :get "/contas")
   (test-request server :get "/pega-tudo/por/exemplo")
   (test-request server :get "/pega-tudo/por/exemplo?foo=bar&foo=foobar")
