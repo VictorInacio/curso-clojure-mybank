@@ -52,8 +52,8 @@
                       ;; 3. add interceptador p/ alterar reposta final
                       app-interceptors/coerce-body
                       app-interceptors/lista-contas-interceptor] :route-name :contas]
-     ["/saldo/:id" :get [app-interceptors/get-saldo-interceptor] :route-name :saldo]
-     ["/deposito/:id" :post app-interceptors/make-deposit-interceptor :route-name :deposito]}))
+     ["/saldo/:id" :get [app-interceptors/conta-existe-interceptor app-interceptors/get-saldo-interceptor] :route-name :saldo]
+     ["/deposito/:id" :post [app-interceptors/conta-existe-interceptor app-interceptors/make-deposit-interceptor] :route-name :deposito]}))
 
 (defonce server (atom nil))
 
@@ -70,7 +70,7 @@
                              ;; 2. carrega contas ao contexto
                              app-interceptors/carrega-contas-interceptor)))
 
-(http/log-request)
+;(http/log-request)
 
 (defn create-server
   "Creates a HTTP Server using `service-map` definitions."

@@ -14,6 +14,7 @@
 (def created  (partial response 201))
 (def accepted (partial response 202))
 (def error    (partial response 500))
+(def bad-request (partial response 400))
 
 ;; 1. Debugging Interceptors
 (def echo
@@ -52,6 +53,20 @@
 (def carrega-contas-interceptor
   (i/interceptor {:name  :contas-interceptor
                   :enter carrega-contas}))
+
+(defn conta-existe?
+  [context]
+  (let [id-conta (-> context :request :path-params :id keyword)
+        contas (:contas context)]
+    (not (nil? (get @contas id-conta)))))
+
+(def conta-existe-interceptor
+  (i/interceptor
+    {:name  :conta-existe-interceptor
+     :enter (fn [context]
+              (if (conta-existe? context)
+                context
+                (assoc context :response (bad-request "conta nao existe!" "Content-Type" "text/plain"))))}))
 
 (defn lista-contas
   "Recupera contas (`:contas`) e associa a um :response"
