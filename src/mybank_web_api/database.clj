@@ -18,13 +18,12 @@ O valor de cada chave no mapa dele é um outro mapa com o nome e status da taref
 
 No meu exemplo pra cada conta tem um mapa com a chave :saldo e o valor"
 
-(defrecord Database []
+(defrecord Database [config]
   component/Lifecycle
 
   (start [this]
-    (println "Iniciar o atomo contendo dados das contas.edn bancárias inicialmente procurando um
-    arquivo resources/contas.edn.edn, caso não exista iniciar o map pré definido.")
-    (let [arquivo (-> "resources/contas.edn"
+    (let [_ (println config)
+          arquivo (-> (-> config :config :db-file )
                       slurp
                       read-string)]
       (assoc this :contas (atom arquivo))))
@@ -35,7 +34,7 @@ No meu exemplo pra cada conta tem um mapa com a chave :saldo e o valor"
     (assoc this :store nil)))
 
 (defn new-database []
-  (->Database))
+  (->Database {}))
 
 
 

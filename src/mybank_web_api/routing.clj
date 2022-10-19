@@ -1,7 +1,8 @@
 (ns mybank-web-api.routing
   (:require [mybank-web-api.bank :as bank]
             [io.pedestal.http.route :as route]
-            [io.pedestal.interceptor :as i]))
+            [io.pedestal.interceptor :as i]
+            [com.stuartsierra.component :as component]))
 
 
 (def routes
@@ -10,3 +11,16 @@
                                          :enter bank/get-saldo}) :route-name :saldo]
       ["/deposito/:id" :post (i/interceptor {:name  :make-deposit
                                              :enter bank/make-deposit}) :route-name :deposito]}))
+
+
+
+(defrecord Routes []
+  component/Lifecycle
+  (start [this]
+    (assoc this :routes routes))
+  (stop [this]
+    (dissoc this :routes))
+  )
+
+(defn new-routes []
+  (->Routes))

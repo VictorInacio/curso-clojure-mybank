@@ -2,7 +2,6 @@
   (:require [io.pedestal.http :as http]
             [io.pedestal.test :as test]
             [io.pedestal.interceptor :as i]
-            [mybank-web-api.routing :as r]
             [com.stuartsierra.component :as component]))
 
 (defonce server (atom nil))
@@ -20,7 +19,7 @@
   (stop-server)
   (start-server service-map))
 
-(defrecord Servidor [database]
+(defrecord Servidor [database routes config]
   component/Lifecycle
 
   (start [this]
@@ -29,8 +28,8 @@
                         (assoc context :contas (:contas database)))
           db-interceptor {:name  :db-interceptor
                           :enter assoc-store}
-          service-map-base {::http/routes r/routes
-                            ::http/port   9999
+          service-map-base {::http/routes (:routes routes)
+                            ::http/port   (-> config :config :port )
                             ::http/type   :jetty
                             ::http/join?  false}
           service-map (-> service-map-base
@@ -52,4 +51,4 @@
     (stop-server)))
 
 (defn new-servidor []
-  (->Servidor {}))
+  (->Servidor {} {} {}))

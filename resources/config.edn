@@ -1,0 +1,2 @@
+{:port 9999
+ :db-file "resources/contas.edn"}
