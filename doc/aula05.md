@@ -93,3 +93,95 @@ Main schema.core functions:
 ```
 
 
+```clojure
+;; maybe (nilable)
+(s/validate (s/maybe s/Keyword) :a)
+(s/validate (s/maybe s/Keyword) nil)
+
+;; eq and enum
+(s/validate (s/eq :a) :a)
+(s/validate (s/enum :a :b :c) :a)
+
+;; pred
+(s/validate (s/pred odd?) 1)
+
+```
+
+Adicionar nas funções bank:
+
+```clojure
+
+(s/defschema Contas {s/Keyword {:saldo Number}})
+
+(s/explain Contas)
+
+(s/check Contas {:1 {:saldo 1}})
+(s/validate Contas {:1 {:saldo 1}})
+
+(s/check Contas {1 {:saldo "a"}})
+(s/validate Contas {1 {:saldo "a"}})
+
+(s/defn ^:always-validate get-saldo [id-conta :- s/Keyword contas :- Contas]
+  (get contas id-conta "conta inválida!"))
+
+(get-saldo 1 {})
+
+(s/with-fn-validation
+  (get-saldo 1 {}))
+
+(s/set-fn-validation! true)
+(s/set-fn-validation! false)
+
+(defn get-saldo-interceptor [context]
+  (let [id-conta (-> context :request :path-params :id keyword)
+        contas (-> context :contas)
+        saldo (get-saldo id-conta @contas)]
+    (assoc context :response {:status  200
+                              :headers {"Content-Type" "text/plain"}
+                              :body    saldo})))
+```
+
+```clojure
+(s/defschema Context {s/Any s/Any})
+
+(s/defschema Response {s/Any s/Any
+                       :response {:body s/Any
+                                  :status s/Int
+                                  s/Any s/Any}})
+(defn get-saldo [context]
+  (s/validate Context context)
+  (let [id-conta (-> context :request :path-params :id keyword)
+        contas (-> context :contas)
+        ret (assoc context :response {:status  200
+                                      :headers {"Content-Type" "text/plain"}
+                                      :body    (id-conta @contas "conta inválida!")})]
+    (s/validate Response ret)))
+
+(get-saldo {:request {:path-params {:id "1"}}
+            :contas (atom {})})
+
+
+(get-saldo {:request {:path-params {:id "1"}}
+            :contas (atom {})})
+```
+
+```clojure
+
+(get-saldo "a" {})
+
+(def dbg (atom false))
+(reset! dbg true)
+
+(s/with-fn-validation
+  (get-saldo :2 {:1 {:saldo 1}}))
+
+(if @dbg
+  (s/with-fn-validation
+    (get-saldo :1 {}))
+  (get-saldo :1 {}))
+
+(get-saldo :2 {:1 {:saldo 1}})
+(get-saldo 2 {:1 {:saldo 1}})
+
+(s/set-fn-validation! false)
+```
