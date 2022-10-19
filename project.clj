@@ -11,7 +11,7 @@
                  [clj-http "3.12.1"]
                  [com.stuartsierra/component "1.0.0"]
                  [walmartlabs/system-viz "0.4.0"]
-                 ]
+                 [prismatic/schema "0.4.3"]]
   :main ^:skip-aot mybank-web-api.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot      :all
