@@ -101,3 +101,4 @@
   (defn small? [x] (> 3 x))
 
   (s/validate (s/pred small?) 3))
+

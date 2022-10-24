@@ -2,7 +2,8 @@
   (:require [io.pedestal.http :as http]
             [io.pedestal.test :as test]
             [io.pedestal.interceptor :as i]
-            [com.stuartsierra.component :as component]))
+            [com.stuartsierra.component :as component]
+            ))
 
 (defonce server (atom nil))
 
@@ -28,10 +29,11 @@
                         (assoc context :contas (:contas database)))
           db-interceptor {:name  :db-interceptor
                           :enter assoc-store}
-          service-map-base {::http/routes (:routes routes)
-                            ::http/port   (-> config :config :port )
-                            ::http/type   :jetty
-                            ::http/join?  false}
+          service-map-base {::http/routes        (:routes routes)
+                            ::http/port          (-> config :config :port)
+                            ::http/resource-path "/resources/public"
+                            ::http/type          :jetty
+                            ::http/join?         false}
           service-map (-> service-map-base
                           (http/default-interceptors)
                           (update ::http/interceptors conj (i/interceptor db-interceptor)))]

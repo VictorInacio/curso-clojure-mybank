@@ -1,12 +1,9 @@
 (ns mybank-web-api.core
-  (:require [io.pedestal.http :as http]
-            [com.stuartsierra.component :as component]
+  (:require [com.stuartsierra.component :as component]
             [mybank-web-api.database :as db]
             [mybank-web-api.server :as web-server]
             [mybank-web-api.config :as config]
-            [mybank-web-api.routing :as routes]
-            [clj-http.client :as client]
-            [com.walmartlabs.system-viz :refer [visualize-system]])
+            [mybank-web-api.routing :as routes])
   (:gen-class))
 
 
@@ -25,12 +22,6 @@
 (defn main [] (reset! sys (component/start new-sys)))
 
 (comment
-  (visualize-system new-sys)
-  (require '[clj-http.client :as client])
-  (client/post "http://localhost:9999/deposito/1" {:body "199.93"})
   (main)
-  (:web-server @sys)
-  (start)
-  (http/stop @server)
-  (component/stop new-sys)
+
   )

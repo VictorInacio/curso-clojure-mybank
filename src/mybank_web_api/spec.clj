@@ -39,7 +39,7 @@
 
 (s/valid? ::pessoa :usuario)
 
-(s/exercise ::pessoa 450)
+(s/exercise ::pessoa 4)
 
 (def gen-pessoa (s/gen ::pessoa))
 (gen/generate (s/gen ::pessoa))
@@ -119,6 +119,27 @@
   ::user
   {::username   "victor"
    ::password   "1234"
+   ::comment    "usuario"
+   ::last-login "11000"})
+
+(s/conform
+  ::user
+  {::username   "victor"
+   ::password   "1234"
+   ::comment    "usuario"
+   ::last-login "11000"})
+
+(s/conform
+  ::user
+  {::username   "victor"
+   ::password   "1234"
+   ::comment    "usuario"
+   ::last-login 11000})
+
+(s/valid?
+  ::user
+  {::username   "victor"
+   ::password   "1234"
    ::comment    1
    ::last-login 11000})
 
@@ -187,15 +208,11 @@
 (s/explain-data ::inteiros [1 2 3.1])
 
 ;;;;;;;;;
-
+;; fdef
 (defn ranged-rand
   "Returns random int in range start <= rand < end"
   [start end]
-  ;(+ start (long (rand (- end start))))
-  (+ end 5)
-  )
-
-
+  (+ start (long (rand (- end start)))))
 
 (s/fdef ranged-rand
         :args (s/and (s/cat :start int? :end int?)
@@ -204,16 +221,11 @@
         :fn (s/and #(>= (:ret %) (-> % :args :start))
                    #(< (:ret %) (-> % :args :end))))
 
-{:args {:start 79 :end 99}
- :ret 104}
-
-(doc ranged-rand)
-
 (s/exercise-fn `ranged-rand 40)
 
 (stest/instrument `ranged-rand)
 
-(ranged-rand 1 5)
+(ranged-rand  5 3)
 
 
 
