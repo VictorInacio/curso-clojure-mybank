@@ -2,8 +2,7 @@
   (:require [io.pedestal.http :as http]
             [io.pedestal.test :as test]
             [io.pedestal.interceptor :as i]
-            [com.stuartsierra.component :as component]
-            ))
+            [com.stuartsierra.component :as component]))
 
 (defonce server (atom nil))
 

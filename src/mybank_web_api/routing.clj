@@ -13,7 +13,9 @@
   (route/expand-routes
     #{["/home" :get (i/interceptor {:name  :home
                                     :enter html/home-page}) :route-name :home]
-      ["/par-ou-impar" :get [terminate/verifica-acesso terminate/para-tudo-quando selector/par-ou-impar]]
+      ["/par-ou-impar" :get [terminate/verifica-acesso
+                             terminate/para-tudo-quando
+                             selector/par-ou-impar]]
       ["/saldo/:id" :get [terminate/verifica-acesso
                           (i/interceptor {:name  :get-saldo
                                           :enter bank/get-saldo-interceptor})] :route-name :saldo]

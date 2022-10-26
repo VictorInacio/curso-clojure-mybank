@@ -1,5 +1,6 @@
 (ns mybank-web-api.core
   (:require [com.stuartsierra.component :as component]
+            [com.walmartlabs.system-viz :refer [visualize-system]]
             [mybank-web-api.database :as db]
             [mybank-web-api.server :as web-server]
             [mybank-web-api.config :as config]
@@ -23,5 +24,5 @@
 
 (comment
   (main)
-
+  (visualize-system new-sys)
   )

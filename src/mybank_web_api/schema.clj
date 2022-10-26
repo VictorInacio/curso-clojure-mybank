@@ -2,6 +2,30 @@
   (:require [schema.core :as s :include-macros true])
   (:import (clojure.lang BigInt)))
 
+;; SALDO
+(s/defschema IdConta s/Keyword)
+(s/defschema Contas {s/Keyword {:saldo Number}})
+(s/defschema SaldoResult (s/maybe {:saldo Number}))
+
+
+;; DEPOSITO
+(s/defschema ValorDeposito (s/pred number?))
+(s/defschema ContasAtom (s/pred #(instance? clojure.lang.Atom %)))
+(s/defschema DepositoResult {:id-conta s/Keyword
+                             :novo-saldo s/Num})
+
+
+(s/defschema Context {s/Any s/Any})
+
+(s/defschema Response {s/Any     s/Any
+                       :response {:body   s/Any
+                                  :status s/Int
+                                  s/Any   s/Any}})
+
+
+
+
+;;;;; EXEMPLOS DA AULA
 (comment
   (def FooBar {:foo s/Keyword :bar [Number]})               ;; a schema
   ;(def FooBar {:foo s/Keyword :bar [s/Any]}) ;; a schema
