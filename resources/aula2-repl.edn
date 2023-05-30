@@ -1,0 +1,273 @@
+Starting nREPL server...
+/Users/victorinacio/Library/Java/JavaVirtualMachines/corretto-19.0.2/Contents/Home/bin/java -Dfile.encoding=UTF-8 -XX:-OmitStackTraceInFastThrow -Dclojure.compile.path=/Users/victorinacio/ada/rehearsal/curso-clojure-mybank/target/classes -Dmybank-web-api.version=0.1.0-SNAPSHOT -Dclojure.debug=false "-javaagent:/Applications/IntelliJ IDEA CE ARM.app/Contents/lib/idea_rt.jar=56860:/Applications/IntelliJ IDEA CE ARM.app/Contents/bin" -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath /Users/victorinacio/ada/rehearsal/curso-clojure-mybank/test:/Users/victorinacio/ada/rehearsal/curso-clojure-mybank/src:/Users/victorinacio/ada/rehearsal/curso-clojure-mybank/dev-resources:/Users/victorinacio/ada/rehearsal/curso-clojure-mybank/resources:/Users/victorinacio/ada/rehearsal/curso-clojure-mybank/target/classes:/Users/victorinacio/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/Users/victorinacio/.m2/repository/io/pedestal/pedestal.interceptor/0.5.10/pedestal.interceptor-0.5.10.jar:/Users/victorinacio/.m2/repository/org/msgpack/msgpack/0.6.12/msgpack-0.6.12.jar:/Users/victorinacio/.m2/repository/org/clojure/tools.reader/1.3.2/tools.reader-1.3.2.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/websocket/websocket-api/9.4.44.v20210927/websocket-api-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/tigris/tigris/0.1.1/tigris-0.1.1.jar:/Users/victorinacio/.m2/repository/io/opentracing/opentracing-api/0.33.0/opentracing-api-0.33.0.jar:/Users/victorinacio/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-smile/2.9.9/jackson-dataformat-smile-2.9.9.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/jetty-security/9.4.44.v20210927/jetty-security-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/com/cognitect/transit-clj/0.8.313/transit-clj-0.8.313.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/jetty-server/9.4.44.v20210927/jetty-server-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/clojure/core.incubator/0.1.4/core.incubator-0.1.4.jar:/Users/victorinacio/.m2/repository/io/opentracing/opentracing-noop/0.33.0/opentracing-noop-0.33.0.jar:/Users/victorinacio/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/websocket/websocket-server/9.4.44.v20210927/websocket-server-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/crypto-random/crypto-random/1.2.0/crypto-random-1.2.0.jar:/Users/victorinacio/.m2/repository/cheshire/cheshire/5.9.0/cheshire-5.9.0.jar:/Users/victorinacio/.m2/repository/io/pedestal/pedestal.route/0.5.10/pedestal.route-0.5.10.jar:/Users/victorinacio/.m2/repository/javax/xml/bind/jaxb-api/2.3.0/jaxb-api-2.3.0.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/http2/http2-hpack/9.4.44.v20210927/http2-hpack-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/clojure/tools.analyzer/0.6.9/tools.analyzer-0.6.9.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/jetty-io/9.4.44.v20210927/jetty-io-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/slf4j/slf4j-api/1.7.28/slf4j-api-1.7.28.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/jetty-util-ajax/9.4.44.v20210927/jetty-util-ajax-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/alpn/alpn-api/1.1.3.v20160715/alpn-api-1.1.3.v20160715.jar:/Users/victorinacio/.m2/repository/ring/ring-core/1.9.4/ring-core-1.9.4.jar:/Users/victorinacio/.m2/repository/ring/ring-codec/1.1.3/ring-codec-1.1.3.jar:/Users/victorinacio/.m2/repository/crypto-equality/crypto-equality/1.0.0/crypto-equality-1.0.0.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/jetty-alpn-server/9.4.44.v20210927/jetty-alpn-server-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/nrepl/nrepl/1.0.0/nrepl-1.0.0.jar:/Users/victorinacio/.m2/repository/io/pedestal/pedestal.jetty/0.5.10/pedestal.jetty-0.5.10.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/websocket/websocket-servlet/9.4.44.v20210927/websocket-servlet-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/websocket/websocket-client/9.4.44.v20210927/websocket-client-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/clojure/core.match/0.3.0/core.match-0.3.0.jar:/Users/victorinacio/.m2/repository/org/slf4j/slf4j-simple/1.7.28/slf4j-simple-1.7.28.jar:/Users/victorinacio/.m2/repository/commons-codec/commons-codec/1.15/commons-codec-1.15.jar:/Users/victorinacio/.m2/repository/org/clojure/core.memoize/0.5.9/core.memoize-0.5.9.jar:/Users/victorinacio/.m2/repository/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/http2/http2-common/9.4.44.v20210927/http2-common-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/http2/http2-server/9.4.44.v20210927/http2-server-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/Users/victorinacio/.m2/repository/io/dropwizard/metrics/metrics-core/4.1.0/metrics-core-4.1.0.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/jetty-http/9.4.44.v20210927/jetty-http-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/jetty-servlet/9.4.44.v20210927/jetty-servlet-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/Users/victorinacio/.m2/repository/io/pedestal/pedestal.log/0.5.10/pedestal.log-0.5.10.jar:/Users/victorinacio/.m2/repository/io/pedestal/pedestal.service/0.5.10/pedestal.service-0.5.10.jar:/Users/victorinacio/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.9.9/jackson-core-2.9.9.jar:/Users/victorinacio/.m2/repository/org/ow2/asm/asm-all/4.2/asm-all-4.2.jar:/Users/victorinacio/.m2/repository/org/clojure/data.priority-map/0.0.7/data.priority-map-0.0.7.jar:/Users/victorinacio/.m2/repository/com/cognitect/transit-java/0.8.337/transit-java-0.8.337.jar:/Users/victorinacio/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9.jar:/Users/victorinacio/.m2/repository/io/dropwizard/metrics/metrics-jmx/4.1.0/metrics-jmx-4.1.0.jar:/Users/victorinacio/.m2/repository/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar:/Users/victorinacio/.m2/repository/commons-fileupload/commons-fileupload/1.4/commons-fileupload-1.4.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/jetty-util/9.4.44.v20210927/jetty-util-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/jetty-client/9.4.44.v20210927/jetty-client-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar:/Users/victorinacio/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/Users/victorinacio/.m2/repository/commons-io/commons-io/2.10.0/commons-io-2.10.0.jar:/Users/victorinacio/.m2/repository/org/clojure/core.cache/0.6.5/core.cache-0.6.5.jar:/Users/victorinacio/.m2/repository/io/opentracing/opentracing-util/0.33.0/opentracing-util-0.33.0.jar:/Users/victorinacio/.m2/repository/org/eclipse/jetty/websocket/websocket-common/9.4.44.v20210927/websocket-common-9.4.44.v20210927.jar:/Users/victorinacio/.m2/repository/org/clojure/tools.analyzer.jvm/0.7.2/tools.analyzer.jvm-0.7.2.jar clojure.main -i /private/var/folders/fv/48f754bj5fz8x4y4pw8n8knh0000gn/T/form-init15068694799866323623.clj
+WARNING: update-vals already refers to: #'clojure.core/update-vals in namespace: clojure.tools.analyzer.utils, being replaced by: #'clojure.tools.analyzer.utils/update-vals
+WARNING: update-keys already refers to: #'clojure.core/update-keys in namespace: clojure.tools.analyzer.utils, being replaced by: #'clojure.tools.analyzer.utils/update-keys
+WARNING: update-vals already refers to: #'clojure.core/update-vals in namespace: clojure.tools.analyzer, being replaced by: #'clojure.tools.analyzer.utils/update-vals
+WARNING: update-keys already refers to: #'clojure.core/update-keys in namespace: clojure.tools.analyzer, being replaced by: #'clojure.tools.analyzer.utils/update-keys
+WARNING: update-vals already refers to: #'clojure.core/update-vals in namespace: clojure.tools.analyzer.passes, being replaced by: #'clojure.tools.analyzer.utils/update-vals
+WARNING: update-vals already refers to: #'clojure.core/update-vals in namespace: clojure.tools.analyzer.passes.uniquify, being replaced by: #'clojure.tools.analyzer.utils/update-vals
+Connecting to local nREPL server...
+Clojure 1.11.1
+nREPL server started on port 56863 on host 127.0.0.1 - nrepl://127.0.0.1:56863
+(fn f [x y & xs] (str "fn invoked with positional x arg as -> " x
+                   " second positional y -> "                y
+                   " and args xs as -> "                     xs
+                   " type - x "                              (type xs)
+                   " and aware of itself as f -> " f
+                   " type of f -> " (type f)))
+Error: :namespace-not-found
+Loading src/mybank_web_api/clojure_language/aula3.clj... done
+(fn f [x y & xs] (str "fn invoked with positional x arg as -> " x
+                   " second positional y -> "                y
+                   " and args xs as -> "                     xs
+                   " type - x "                              (type xs)
+                   " and aware of itself as f -> " f
+                   " type of f -> " (type f)))
+=>
+#object[mybank_web_api.clojure_language.aula3$eval17639$f__17640
+        0x1b2458cc
+        "mybank_web_api.clojure_language.aula3$eval17639$f__17640@1b2458cc"]
+((fn f [x y & xs] (str "fn invoked with positional x arg as -> " x
+                    " second positional y -> "                y
+                    " and args xs as -> "                     xs
+                    " type - x "                              (type xs)
+                    " and aware of itself as f -> " f
+                    " type of f -> " (type f))))
+Execution error (ArityException) at mybank-web-api.clojure-language.aula3/eval17645 (aula3.clj:27).
+Wrong number of args (0) passed to: mybank-web-api.clojure-language.aula3/eval17645/f--17646
+((fn f [x y & xs] (str "fn invoked with positional x arg as -> " x
+                    " second positional y -> "                y
+                    " and args xs as -> "                     xs
+                    " type - x "                              (type xs)
+                    " and aware of itself as f -> " f
+                    " type of f -> " (type f))) nil nil)
+=>
+"fn invoked with positional x arg as ->  second positional y ->  and args xs as ->  type - x  and aware of itself as f -> mybank_web_api.clojure_language.aula3$eval17651$f__17652@6ca2a39b type of f -> class mybank_web_api.clojure_language.aula3$eval17651$f__17652"
+((fn f [x y & xs] (str "fn invoked with positional x arg as -> " x
+                    "\n second positional y -> "                y
+                    "\n and args xs as -> "                     xs
+                    "\n type - x "                              (type xs)
+                    "\n and aware of itself as f -> " f
+                    "\n type of f -> " (type f))) nil nil)
+=>
+"fn invoked with positional x arg as ->
+ second positional y ->
+ and args xs as ->
+ type - x
+ and aware of itself as f -> mybank_web_api.clojure_language.aula3$eval17657$f__17658@65fc29c
+ type of f -> class mybank_web_api.clojure_language.aula3$eval17657$f__17658"
+(fn [] )
+=>
+#object[mybank_web_api.clojure_language.aula3$eval17663$fn__17664
+        0x3e835aea
+        "mybank_web_api.clojure_language.aula3$eval17663$fn__17664@3e835aea"]
+#(str "fn invoked with 1 arg x as -> " %)
+=>
+#object[mybank_web_api.clojure_language.aula3$eval17670$fn__17671
+        0x25c8157a
+        "mybank_web_api.clojure_language.aula3$eval17670$fn__17671@25c8157a"]
+(#(str "fn invoked with 1 arg x as -> " %))
+Execution error (ArityException) at mybank-web-api.clojure-language.aula3/eval17677 (aula3.clj:71).
+Wrong number of args (0) passed to: mybank-web-api.clojure-language.aula3/eval17677/fn--17678
+(#(str "fn invoked with 1 arg x as -> " %) 0)
+=> "fn invoked with 1 arg x as -> 0"
+#(str "fn invoked with 1 arg x as -> " %1)
+=>
+#object[mybank_web_api.clojure_language.aula3$eval17691$fn__17692
+        0x46e0df0f
+        "mybank_web_api.clojure_language.aula3$eval17691$fn__17692@46e0df0f"]
+(-> #(str "fn invoked with 1 arg x as -> " %1))
+=>
+#object[mybank_web_api.clojure_language.aula3$eval17698$fn__17699
+        0x12c7de55
+        "mybank_web_api.clojure_language.aula3$eval17698$fn__17699@12c7de55"]
+(-> #(str "fn invoked with 1 arg x as -> " %1)
+  ())
+Syntax error (IllegalArgumentException) compiling at (src/mybank_web_api/clojure_language/aula3.clj:74:1).
+Can't call nil, form: (nil (fn* [p1__17704#] (str "fn invoked with 1 arg x as -> " p1__17704#)))
+(-> #(str "fn invoked with 1 arg x as -> " %1)
+  (eval))
+=>
+#object[mybank_web_api.clojure_language.aula3$eval17709$fn__17710
+        0x4c506ddc
+        "mybank_web_api.clojure_language.aula3$eval17709$fn__17710@4c506ddc"]
+(-> #(str "fn invoked with 1 arg x as -> " %1)
+  (apply))
+Execution error (ArityException) at mybank-web-api.clojure-language.aula3/eval17716 (aula3.clj:2).
+Wrong number of args (1) passed to: clojure.core/apply
+(-> #(str "fn invoked with 1 arg x as -> " %1)
+  (apply 0))
+Execution error (IllegalArgumentException) at mybank-web-api.clojure-language.aula3/eval17723 (aula3.clj:2).
+Don't know how to create ISeq from: java.lang.Long
+(-> #(str "fn invoked with 1 arg x as -> " %1)
+  (apply [0]))
+=> "fn invoked with 1 arg x as -> 0"
+(-> #(str "fn invoked with 1 arg x as -> " %1 " and second positional arg -> " %2)
+  (apply [0]))
+Execution error (ArityException) at mybank-web-api.clojure-language.aula3/eval17738 (aula3.clj:2).
+Wrong number of args (1) passed to: mybank-web-api.clojure-language.aula3/eval17738/fn--17739
+(-> #(str "fn invoked with 1 arg x as -> " %1 " and second positional arg -> " %2)
+  (apply [0 0]))
+=> "fn invoked with 1 arg x as -> 0 and second positional arg -> 0"
+(let [closure "Hi! I'm from the fn definition outer context! 1234"]
+
+  (fn [x] (str "I know a closure -> " closure))
+
+  )
+=>
+#object[mybank_web_api.clojure_language.aula3$eval17752$fn__17753
+        0x42102306
+        "mybank_web_api.clojure_language.aula3$eval17752$fn__17753@42102306"]
+(let [closure "Hi! I'm from the fn definition outer context! 1234"]
+
+  (fn [x] (str "I know a closure -> " closure))
+  ((fn [x] (str "I know a closure -> " closure)))
+
+  )
+Execution error (ArityException) at mybank-web-api.clojure-language.aula3/eval17758 (aula3.clj:4).
+Wrong number of args (0) passed to: mybank-web-api.clojure-language.aula3/eval17758/fn--17761
+(let [closure "Hi! I'm from the fn definition outer context! 1234"]
+
+  (fn [x] (str "I know a closure -> " closure))
+  ((fn [x] (str "I know a closure -> " closure)) 0)
+
+  )
+=> "I know a closure -> Hi! I'm from the fn definition outer context! 1234"
+(def closure2 "Hi! I'm anotehr definition outer context! 5678")
+=> #'mybank-web-api.clojure-language.aula3/closure2
+(def 🦠 "Hi! I'm anotehr definition outer context! 5678")
+=> #'mybank-web-api.clojure-language.aula3/🦠
+(defn f [x] (str "I remember this stuff from outside -> " 🦠))
+=> #'mybank-web-api.clojure-language.aula3/f
+(f 0)
+=> "I remember this stuff from outside -> Hi! I'm anotehr definition outer context! 5678"
+(apply (fn [] ) [])
+=> nil
+(apply (fn [] "fn") [])
+=> "fn"
+(apply (fn [x] (str "fn")) [])
+Execution error (ArityException) at mybank-web-api.clojure-language.aula3/eval17797 (aula3.clj:99).
+Wrong number of args (0) passed to: mybank-web-api.clojure-language.aula3/eval17797/fn--17798
+(apply (fn [x] (str "fn")) [0])
+=> "fn"
+(apply (fn [x y ] (str "fn")) [0])
+Execution error (ArityException) at mybank-web-api.clojure-language.aula3/eval17809 (aula3.clj:99).
+Wrong number of args (1) passed to: mybank-web-api.clojure-language.aula3/eval17809/fn--17810
+(apply (fn [] "fn") [])
+=> "fn"
+(apply (fn [x] "fn") [0])
+=> "fn"
+(apply (fn [x y ] "fn") [0 1])
+=> "fn"
+(apply (fn [x y ] (str "fn" x y)) [0 1])
+=> "fn01"
+(apply (fn [x y ] (clojure.string/join " , " ["fn" x y])) [0 1])
+=> "fn , 0 , 1"
+(apply (fn [x y z] (clojure.string/join " , " ["fn" x y z])) [0 1])
+Execution error (ArityException) at mybank-web-api.clojure-language.aula3/eval17845 (aula3.clj:105).
+Wrong number of args (2) passed to: mybank-web-api.clojure-language.aula3/eval17845/fn--17846
+(apply (fn [x y z] (clojure.string/join " , " ["fn" x y z])) [0 1])
+Execution error (ArityException) at mybank-web-api.clojure-language.aula3/eval17851 (aula3.clj:106).
+Wrong number of args (2) passed to: mybank-web-api.clojure-language.aula3/eval17851/fn--17852
+(apply (fn [x y z] (clojure.string/join " , " ["fn" x y z])) [0 1])
+Execution error (ArityException) at mybank-web-api.clojure-language.aula3/eval17857 (aula3.clj:106).
+Wrong number of args (2) passed to: mybank-web-api.clojure-language.aula3/eval17857/fn--17858
+(apply (fn [x y z] (clojure.string/join " , " ["fn" x y z])) [0 1 2])
+=> "fn , 0 , 1 , 2"
+(apply (fn [x y z & args] (clojure.string/join " , " ["fn" x y z])) [0 1 2])
+=> "fn , 0 , 1 , 2"
+(apply (fn [x y z & args] (clojure.string/join " , " ["fn" x y z args])) [0 1 2])
+=> "fn , 0 , 1 , 2 , "
+(apply (fn [x y z & args] (clojure.string/join " , " ["fn" x y z args])) [0 1 2 3])
+=> "fn , 0 , 1 , 2 , (3)"
+(apply (fn [x y z & args] (clojure.string/join " , " ["fn" x y z args])) [0 1 2 3])
+=> "fn , 0 , 1 , 2 , (3)"
+(apply (fn [x y z & args] (clojure.string/join " , " ["fn" x y z args])) [0 1 2])
+=> "fn , 0 , 1 , 2 , "
+(apply (fn [x y z & args] (clojure.string/join " , " ["fn" x y z args])) [0 1 2 3])
+=> "fn , 0 , 1 , 2 , (3)"
+(apply (fn [x y z & [args]] (clojure.string/join " , " ["fn" x y z args])) [0 1 2 3])
+=> "fn , 0 , 1 , 2 , 3"
+(apply (fn [x y z & [args]] (clojure.string/join " , " ["fn" x y z args])) [0 1 2 3 4])
+=> "fn , 0 , 1 , 2 , 3"
+(apply (fn [x y z & [args1]] (clojure.string/join " , " ["fn" x y z args1])) [0 1 2 3 4])
+=> "fn , 0 , 1 , 2 , 3"
+(apply (fn [x y z & [args1 args2]] (clojure.string/join " , " ["fn" x y z args1])) [0 1 2 3 4])
+=> "fn , 0 , 1 , 2 , 3"
+(apply (fn [x y z & [args1 args2]] (clojure.string/join " , " ["fn" x y z args1 args2])) [0 1 2 3 4])
+=> "fn , 0 , 1 , 2 , 3 , 4"
+(apply (fn [x y z & [args1 args2]] (clojure.string/join " , " ["fn" x y z args1 args2])) [0 1 2 3 4 5])
+=> "fn , 0 , 1 , 2 , 3 , 4"
+(apply (fn [x y z & [args1 args2]] (clojure.string/join " , " (concat ["fn" x y z args1 args2]) )) [0 1 2 3 4 5])
+=> "fn , 0 , 1 , 2 , 3 , 4"
+(apply (fn [x y z & args] (clojure.string/join " , " (concat ["fn" x y z] args) )) [0 1 2 3 4 5])
+=> "fn , 0 , 1 , 2 , 3 , 4 , 5"
+(apply (fn [x y z & args] (clojure.string/join " , " (concat ["fn" x y z] args) )) [0 1 2 3 4 5 6 7 8])
+=> "fn , 0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8"
+(apply (fn [x & options] "fn") [0])
+=> "fn"
+(apply (fn [x & options] (j " , " "fn")) [0])
+Syntax error compiling at (src/mybank_web_api/clojure_language/aula3.clj:1:176).
+Unable to resolve symbol: j in this context
+(def j clojure.string/join)
+=> #'mybank-web-api.clojure-language.aula3/j
+(apply (fn [x & options] (j " , " "fn")) [0])
+=> "f , n"
+(apply (fn [x & options] (j " , " ["fn"])) [0])
+=> "fn"
+(apply (fn [x & options] (j " , " ["fn" x])) [0])
+=> "fn , 0"
+(apply (fn [x] (str "fn " x)) [0])
+=> "fn 0"
+(apply (fn [x & options] "fn") [0])
+=> "fn"
+(apply (fn [x & options] (j " , " ["fn" x])) [0])
+=> "fn , 0"
+(def j (partial clojure.string/join " , "))
+=> #'mybank-web-api.clojure-language.aula3/j
+(apply (fn [x & options] (j " , " ["fn" x])) [0])
+Execution error (ArityException) at mybank_web_api.clojure_language.aula3$eval18037$fn__18038/doInvoke (aula3.clj:1).
+Wrong number of args (3) passed to: clojure.string/join
+(apply (fn [x & options] (j ["fn" x])) [0])
+=> "fn , 0"
+(def j (partial j " , "))
+=> #'mybank-web-api.clojure-language.aula3/j
+(def j (partial j " , "))
+=> #'mybank-web-api.clojure-language.aula3/j
+(apply (fn [x & options] (j ["fn" x])) [0])
+Execution error (ArityException) at mybank_web_api.clojure_language.aula3$eval18053$fn__18054/doInvoke (aula3.clj:1).
+Wrong number of args (4) passed to: clojure.string/join
+(def j (partial clojure.string/join " , "))
+=> #'mybank-web-api.clojure-language.aula3/j
+(apply (fn [x & options] (j ["fn" x])) [0])
+=> "fn , 0"
+(apply (fn [x & options] (j ["fn" x])) [0])
+=> "fn , 0"
+(def j (partial j " , "))
+=> #'mybank-web-api.clojure-language.aula3/j
+(apply (fn [x & options] (j ["fn" x])) [0])
+Execution error (ArityException) at mybank_web_api.clojure_language.aula3$eval18075$fn__18076/doInvoke (aula3.clj:1).
+Wrong number of args (3) passed to: clojure.string/join
+(def j (partial clojure.string/join " , "))
+=> #'mybank-web-api.clojure-language.aula3/j
+(apply (fn [x & options] (j ["fn" x])) [0])
+=> "fn , 0"
+(apply (fn [x & options] (j ["fn" x])) [{:a 1}])
+=> "fn , {:a 1}"
+(apply (fn [x & options] (j ["fn" x])) [{:a 1
+                                         :b 1}])
+=> "fn , {:a 1, :b 1}"
+(apply (fn [x & {:as options}] (j ["fn" x])) [{:a 1 :b 1}])
+=> "fn , {:a 1, :b 1}"
+(apply (fn [x & {:as options}] (j ["fn" x])) [{:a 1 :b 1}])
+=> "fn , {:a 1, :b 1}"
+(apply (fn [x & {:as options}] (j ["fn" x])) [0 {:a 1 :b 1}])
+=> "fn , 0"
+(apply (fn [x & {:as options}] (j ["fn" x options])) [0 {:a 1 :b 1}])
+=> "fn , 0 , {:a 1, :b 1}"
+(apply (fn [x & {:keys [a b] :as options}] (j ["fn" x options])) [0 {:a 1 :b 1}])
+=> "fn , 0 , {:a 1, :b 1}"
+(apply (fn [x & {:keys [a b] :as options}] (j ["fn" x a])) [0 {:a 1 :b 1}])
+=> "fn , 0 , 1"
+(apply (fn [x & {:keys [a b] :as options}] (j ["fn" x a b])) [0 {:a 1 :b 1}])
+=> "fn , 0 , 1 , 1"
