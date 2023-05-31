@@ -11,19 +11,25 @@
                  :on-close   (fn [ws status reason] (println "WebSocket closed!"))}))
 
 (def stream-url "wss://stream.binance.com:9443/ws/")
-(def sub "{\"method\":\"SUBSCRIBE\",\"params\":[\"btcbrlt@aggTrade\",\"btcusdt@depth\"],\"id\":1}")
 
+(def sub "{\"method\":\"SUBSCRIBE\",\"params\":[\"btcusdt@aggTrade\",\"btcusdt@depth\"],\"id\":1}")
+(print sub)
 (comment
   (do
     (def ws @(ws-cli (str stream-url "btcbrl@trade")))
     (ws/send! ws sub)
-    (Thread/sleep 2500)
+    (Thread/sleep 5000)
     (ws/close! ws)))
 
 
 
 ;; SERVER
 (comment
+  (defn uppercase-handler
+    "Handle a message by upper casing it and echoing it back."
+    [socket msg]
+    (s/put! socket (clojure.string/upper-case msg)))
+
   (defn uppercase-handler
     "Handle a message by upper casing it and echoing it back."
     [socket msg]
@@ -47,4 +53,7 @@
     ; > A MESSAGE
     (ws/send! ws2 "A message")
     ; > ANOTHER MESSAGE
-    (ws/send! ws2 "Another message")))
+    (ws/send! ws2 "Another message"))
+
+  (ws/send! ws2 "asaaaaaaa")
+  )

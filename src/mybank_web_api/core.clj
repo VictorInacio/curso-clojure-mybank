@@ -21,8 +21,8 @@
     {:status 200 :body {:id-conta   id-conta
                         :novo-saldo (id-conta @contas)}}))
 
-(defn get-time-delay [r]
-  (let [now        1500
+(defn get-time-delay [_]
+  (let [now        (System/currentTimeMillis)
         spend-time (fn []
                      (Thread/sleep 3000)
                      now)
