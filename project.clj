@@ -8,8 +8,7 @@
                  [io.pedestal/pedestal.route "0.5.10"]
                  [io.pedestal/pedestal.jetty "0.5.10"]
                  [org.slf4j/slf4j-simple "1.7.28"]
-
-
+                 [prismatic/schema "1.4.1"]
                  [aleph "0.6.2"]
                  [hato "0.9.0"]]
   :main ^:skip-aot mybank-web-api.core

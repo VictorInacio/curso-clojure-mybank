@@ -13,6 +13,9 @@
 (def stream-url "wss://stream.binance.com:9443/ws/")
 
 (def sub "{\"method\":\"SUBSCRIBE\",\"params\":[\"btcusdt@aggTrade\",\"btcusdt@depth\"],\"id\":1}")
+(def sub {:method :SUBSCRIBE
+          :params ["a" "_ _"]})
+
 (print sub)
 (comment
   (do

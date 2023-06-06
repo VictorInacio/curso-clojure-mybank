@@ -3,6 +3,7 @@
             [io.pedestal.http.route :as route]
             [io.pedestal.test :as test-http]
             [clojure.pprint :as pp]
+            [mybank-web-api.model :as model]
             )
   (:gen-class))
 

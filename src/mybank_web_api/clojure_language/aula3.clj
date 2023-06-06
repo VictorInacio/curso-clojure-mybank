@@ -1,5 +1,12 @@
 (ns mybank-web-api.clojure-language.aula3)
 
+(set! *warn-on-reflection* true)
+
+
+(defn test [^String s]
+  (.toUpperCase s))
+
+(test "abc")
 ;; Funções
 
 (fn [])

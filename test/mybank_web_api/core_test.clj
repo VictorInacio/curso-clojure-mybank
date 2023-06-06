@@ -2,9 +2,17 @@
   (:require [clojure.test :refer :all]
             [mybank-web-api.core :refer :all]))
 
+
 (deftest a-test
   (testing "FIXED, I will not fail."
-    (is (= 1 1))))
+    (is (fn? (get-in [:a :b] (s/check
+                               Data
+                               {:a {:b ["abc"]
+                                    :c 123}
+                                :d [{:e :bc
+                                     :f [12.2 13 100]}
+                                    {:e :bc
+                                     :f [-1]}]}))))))
 
 
 (deftest api-test
@@ -22,4 +30,6 @@
                       "Content-Type"                      "text/plain"}}
 
            ))))
+
+(run-all-tests)
 
