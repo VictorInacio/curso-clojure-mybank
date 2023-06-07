@@ -1,26 +1,6 @@
 (ns mybank-web-api.clojure-language.aula5)
 
-;; Concurrency
 
-(def a (atom 0))
-
-(deref a)
-
-(reset! a 2)
-
-(let [fs (for [n (range 100)]
-           (+ n 1))]
-  fs)
-
-(let [fs (for [_ (range 100)]
-           (future
-             (dotimes [_ 100]
-               (reset! a (inc @a)))))]
-
-  (doseq [f fs]
-    @f))
-
-(deref a)
 
 
 (def counter (atom 0))
@@ -39,12 +19,37 @@
 
 
 
+;; Concurrency
+
+(def a (atom 0))
+
+(deref a)
+
+(reset! a 0)
+
+(let [fs (for [n (range 100)]
+           (+ n 10))]
+  fs)
+
+(let [fs (for [_ (range 100)]
+           (future
+             (dotimes [_ 100]
+               (reset! a (inc @a)))))]
+  (doseq [f fs]
+    @f))
+
+(deref a)
+
+
+
 
 
 
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(reset! a 0)
+
 (let [fs (for [_ (range 100)]
            (future
              (dotimes [_ 100]
@@ -65,13 +70,13 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(reset! a 0)
 (let [fs (for [_ (range 100)]
            (future
              (dotimes [_ 100]
                (loop []
                  (let [v @a]
                    (when-not (compare-and-set! a v (inc v))
-
                      (recur)))))))]
   (doseq [f fs]
     @f))
@@ -90,9 +95,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(let [fs (for [_ (range 1000)]
+(let [fs (for [_ (range 10000)]
            (future
-             (dotimes [_ 1000]
+             (dotimes [_ 10000]
                (loop []
                  (let [v @a]
                    (when-not (compare-and-set! a v (inc v))
@@ -101,7 +106,6 @@
   (doseq [f fs]
     @f))
 
-(def a (atom 0))
 (deref a)
 
 
@@ -128,7 +132,7 @@
 
 (def f
   (future
-    (Thread/sleep 4000)
+    (Thread/sleep 1000)
     (println "done")
     100))
 
@@ -142,7 +146,7 @@
 
 
 (defn long-calculation [num1 num2]
-  (Thread/sleep 5000)
+  (Thread/sleep 1000)
   (* num1 num2))
 
 (defn long-run []
@@ -159,7 +163,7 @@
         z (future (long-calculation 17 19))]
     (* @x @y @z)))
 
-
+(time (fast-run))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Promisses
@@ -177,9 +181,11 @@
   (deliver p 123))
 
 (realized? p)
+(deref p)
 
 (let [p (promise)]
-  (let [google "https://google.com"
+  (let [google {:url "https://amazon.com"
+                :site-name :google}
         news   "https://news.ycombinator.com"]
     (doseq [url [google news]]
       (future (let [response (slurp url)]
@@ -195,9 +201,11 @@
   (do (deliver z (+ @x @y))
       (println "z value : " @z)))
 
+(realized? x)
+(realized? y)
 (realized? z)
-(deliver x 1)
-(deliver y 1)
+(deliver x 56)
+(deliver y 54)
 
 
 (defn long-running-task []
