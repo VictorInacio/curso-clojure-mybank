@@ -27,8 +27,22 @@
 (defn inc-print [val] (println val))
 
 (def counter (atom 0))
+
 (let [n 2]
-  (future (dotimes [_ n] (swap! counter inc-print))) (future (dotimes [_ n] (swap! counter inc-print))) (future (dotimes [_ n] (swap! counter inc-print))))
+  (future (dotimes [_ n] (swap! counter inc-print)))
+  (future (dotimes [_ n] (swap! counter inc-print)))
+  (future (dotimes [_ n] (swap! counter inc-print))))
+
+
+
+
+
+
+
+
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (let [fs (for [_ (range 100)]
