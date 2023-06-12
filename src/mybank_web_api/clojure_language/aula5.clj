@@ -209,29 +209,37 @@
 
 
 (defn long-running-task []
-  (Thread/sleep 5000)
+  (Thread/sleep 7000)
   (println "COMPLETED long-running-task"))
 
 
-(defn launch-timed []
+(defn launch-timed [f & args]
   (let [begin-promise (promise)
         end-promise   (promise)]
     (future (deliver begin-promise (System/currentTimeMillis))
-            (long-running-task)
+            (println (apply f args))
             (deliver end-promise (System/currentTimeMillis)))
     (println "task begin at" @begin-promise)
     (println "task end at" @end-promise)))
 
+(future (launch-timed + 1 2 3 ))
+
 
 ;; Delay
 
-(def my-delay (delay (println "did some work") 100))
+(def my-delay (delay
+                (Thread/sleep 500)
+                (println "did some work")
+                100))
 
+(deref my-delay)
 (force my-delay)
 
 ;; Memoize
 
-(defn myfunc [a] (println "doing some work") (+ a 10))
+(defn myfunc [a]
+  (println "doing some work")
+  (+ a 10))
 
 (myfunc 1)
 (myfunc 2)
@@ -240,6 +248,7 @@
 
 (myfunc-memo 1)
 (myfunc-memo 2)
+(myfunc-memo 3)
 
 ;; Fibonacci number with recursion.
 (defn fib [n]
@@ -248,6 +257,7 @@
     1 1
     (+ (fib (dec n)) (fib (- n 2)))))
 
+(fib 40)
 (time (fib 40))
 
 (def m-fib
@@ -257,8 +267,17 @@
                1 1
                (+ (m-fib (dec n)) (m-fib (- n 2)))))))
 
-(time (m-fib 50))
+(time (m-fib 40))
 
+(defn memoize
+  [f]
+  (let [mem (atom {})]
+    (fn [& args]
+      (if-let [e (find @mem args)]
+        (val e)
+        (let [ret (apply f args)]
+          (swap! mem assoc args ret)
+          ret)))))
 
 (defn memoize2
   [f mem]
@@ -269,18 +288,23 @@
         (swap! mem assoc args ret)
         ret))))
 
-(def memoria-fn-quadrat (atom {}))
+(def cache (atom {}))
 
 (defn quadrado [x]
-  (* x))
+  (* x x))
 
 (def quadrat-mem
-  (memoize2 quadrado memoria-fn-quadrat))
+  (memoize2 quadrado cache))
 
-(deref memoria-fn-quadrat)
+(deref cache)
 
-(quadrat-mem 0)
+(quadrat-mem 4)
 (quadrat-mem 2)
 
 (doseq [n (range 10)]
-  (quadrat-mem n))
+  (quadrat-mem n)
+  (println (str n " " (type @cache))))
+
+(type @cache)
+(keys @cache)
+(vals @cache)
