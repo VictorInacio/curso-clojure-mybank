@@ -1,124 +1,93 @@
 (ns mybank-web-api.clojure-language.aula6)
 
 (comment
-  (def xs (range 10))
-  (def xs (range 1000000))
+  (first '(0 1))                                            ;; CAR
+  (first (first '([0 1])))                                  ;; CAR
+  (ffirst '([0 1]))                                         ;; CAR
+  (rest '(0 1))                                             ;; CDR
 
-  (cons 7777 xs)
+  (def xs (cons 0 '(1 2 3)))
+  (first xs)
+  (rest xs)
+
+  (def fs [first rest])
+  ((second fs) xs)
+
+  (def fs2 [#(+ % 1) 1 #(println %) 1 "asdsad" {}])
+  ((second fs2) xs)
+
+
+  (first xs)
+  (second xs)
+  (nth xs 3)
+  (nth xs 4)
+  (nth xs 4 "not found")
+  (last xs)
+  (rest xs)
+
+  (next xs)
+
+  (-> xs
+      next
+      next
+      next
+      next
+      )
+
+  (next [])
+  (rest [])
+  (rest xs)
+  (-> xs
+      rest
+      rest
+      rest
+      rest
+      )
+
+
+
+
+  (def xs (range 10))
+  (def xs-mil (range 1000000))
+  (def xs-infinity (range))
+  xs-infinity
+
+  (cons 7777 [0 1 2 3])
   (conj [0 1 2 3] 7777)
   (conj '(0 1 2 3) 7777)
 
 
   (def xs-start-stop (range 0 46))
-  (def xs-step (range 0 1000 100))
+  (type (first xs-start-stop))
+  (def xs-step (range 0N 1000 100))
+  (def xs-step (range 0 1000N 100))
+  (def xs-step (range 0 1000 100N))
+  (type (first xs-step))
+  (type (second xs-step))
+  (type (last xs-step))
+  (type 1.1)
+  (type 1N)
+  (type 1.0M)
+  (type 1/2)
+
   (def xs-step (range 0 10 1/2))
   (def xs-step (range 1/2 10 1/2))
+  (def xs-step (range -256 1984 64))
 
   (instance? clojure.lang.Seqable xs)
+  (seq? xs)
+  (seqable? xs)
 
-
-  (first xs)
-  (second xs)
-
-  (nth xs 51)
-  (last xs)
-  (rest xs)
   (cons 0 xs)
 
   (def xs (range 10))
 
+  (take 2 xs)
   (take-nth 2 xs)
   (take-nth 3 xs)
-
-  (defn mutiplos [n coll]
-    )
-
-
-  (def s-map {:a 1 :b 2 :c 3})
-
-  (instance? clojure.lang.Seqable s-map)
-
-  (hash :a)
-  (hash :4)
-  (hash [:a])
-  (hash 0)
-  (hash 0)
-
-  (type s-map)
-
-  (first s-map)
-  (second s-map)
-  (last s-map)
-  (rest s-map)
-
-  (cons [:d 4] s-map)
-  (cons :d s-map)
-
-  (into {} (rest s-map))
-  (into {:a 1} (rest s-map))
-
-
-
-  (defn soma-val
-    [[k v]]
-    [k (inc v)])
-
-  (soma-val [:a 1])
-
-  (map soma-val s-map)
-
-  (->> s-map
-       (map soma-val)
-       (into {}))
-
-  ;; Seq in, Seq out
-
-  ;Shorter seq from a longer seq:
-
-  (def xs (range 10))
-
-  (distinct [1 1 2 2 3 3])
-  (distinct [[1 1]
-             [1 1]
-             [2 2]
-             [2 2]])
-
-  (filter odd? xs)
-  (filter even? xs)
-  (keep odd? xs)
-
-  (remove odd? xs)
-  (remove even? xs)
-
-  (apply str (distinct "tattoo"))
-
-  (for [x xs]
-    x)
-
-  (for [[k v] {:a 1 :b 2 :c 3}]
-    [k (inc v)])
-
-  (defn odd-null-pin? [n]
-    (when-not (= 0 (mod n 5))
-      n))
-
-  (odd-null-pin? 5)
-  (odd-null-pin? 6)
-
-  (keep odd-null-pin? (range 1 16))
-
-
-  (defn odd-null-pin-idx? [idx n]
-    (when-not (= 0 (mod n 5))
-      [idx n]))
-
-  (keep-indexed odd-null-pin-idx? (range 16))
-  (map-indexed odd-null-pin-idx? (range 16))
-
-
-  (drop 9 (range 0 99))
+  (drop 9 (range))
   (drop-while neg? [-1 -2 -6 -7 1 2 3 4 -5 -6 0 1])
-  (take-while pos? [1 2 3 4 -5 -6 0 1 -1 -2 -6 -7])
+  (take-while pos? [1 2 3 4 -1 -2 -6 -7 -5 -6 0 1])
 
 
   (def entries [{:month 1 :val 12}
@@ -145,7 +114,130 @@
       #(<= (:month %) m) coll))
 
   (get-result entries 7)
-  (ignore-results entries 11)
+  (ignore-results entries 7)
+
+  ;;;;;;;; seq de num inteiros
+
+  (def s-map {:a 1 :b 2 :c 3})
+
+  (first s-map)
+  (next s-map)
+
+  (-> s-map
+      next
+      next
+      next)
+
+  (-> s-map
+      rest
+      rest
+      rest)
+
+  (rest s-map)
+
+  (instance? clojure.lang.Seqable s-map)
+
+  (hash :a)
+  (hash :4)
+  (hash [:a])
+  (hash {:a 1})
+  (hash 0)
+  (hash 0)
+
+  (type s-map)
+
+  (first s-map)
+  (second s-map)
+  (last s-map)
+  (rest s-map)
+
+  (cons [:d 4] s-map)
+  (cons :d s-map)
+
+  (into {} (rest s-map))
+  (into {} '([:d 4] [:a 1] [:b 2] [:c 3]
+             [:1 1] [:2 1] [:2 1] [:3 1] [:4 1] [:5 1]))
+  (into {:a 1} (rest s-map))
+
+
+
+  (defn soma-val
+    [[k v]]
+    [k (inc v)])
+
+  (soma-val [:a 1])
+
+  (def s-map {:a 1 :b 2 :c 3})
+
+  (map soma-val s-map)
+
+  (->> s-map
+       (map soma-val)
+       (into {}))
+
+  ;; Seq in, Seq out
+
+  ;Shorter seq from a longer seq:
+
+  (def xs (range 10))
+
+  (distinct [1 1 2 2 3 3])
+  (distinct [[1 1]
+             [1 1]
+             [2 2]
+             [2 2]])
+
+  (filter odd? xs)
+  (filter even? xs)
+  (keep odd? xs)
+  ;(keep odd? [0 2 ""])
+
+  (mod 25 5)
+
+  (defn odd-null-pin? [n]
+    (when-not (= 0 (mod n 5))
+      n))
+
+  (odd-null-pin? 5)
+  (odd-null-pin? 6)
+  (odd-null-pin? 26)
+
+  (map odd-null-pin? (range 1 16))
+  (keep odd-null-pin? (range 1 16))
+
+
+  (remove odd? xs)
+  (remove even? xs)
+
+  (first "tattoo")
+  (last "tattoo")
+  (apply str (distinct "tattoo"))
+
+  (seq? "tattoo")
+  (seqable? "tattoo")
+
+  (for [x (range 10)]
+    [(* x x) x])
+
+  (for [x xs]
+    x)
+
+  (for [[k v] {:a 1 :b 2 :c 3}]
+    [k (inc v)])
+
+  (into {} (for [[k v] {:a 1 :b 2 :c 3}]
+             [k (inc v)]))
+
+
+
+
+  (defn odd-null-pin-idx? [idx n]
+    (when-not (= 0 (mod n 5))
+      [idx n]))
+
+  (keep-indexed odd-null-pin-idx? (range 16))
+  (map-indexed odd-null-pin-idx? (range 16))
+
   )
 
 (comment
@@ -211,14 +303,37 @@
 
 (comment
   (zipmap [:a :b :c :d :e] [1 2 3 4])
+  (zipmap [:a :b :c :d :e] [1 2 3 4 5 7 8])
+
+  (keys s-map)
+  (vals s-map)
+  (zipmap (keys s-map)
+          (vals s-map))
 
   (reduce into {} [{:dog :food} {:cat :chow}])
+  (reductions into {} [{:dog :food} {:cat :chow}])
   (reductions into {:a 1} [{:dog :food} {:cat :chow}])
 
   (reduce + (map #(* % %) (range 5)))
   (reductions + (map #(* % %) (range 5)))
 
   (:user-id {:user-id 1 :uri "/"})
+
+  (group-by (fn [x] (odd? (:user-id x)))
+            [{:user-id 1 :uri "/"}
+             {:user-id 2 :uri "/foo"}
+             {:user-id 2 :uri "/foo2"}
+             {:user-id 2 :uri "/foo4"}
+             {:user-id 3 :uri "/foo5"}
+             {:user-id 3 :uri "/account"}])
+
+  (group-by (fn [x] (:user-id x))
+            [{:user-id 1 :uri "/"}
+             {:user-id 2 :uri "/foo"}
+             {:user-id 2 :uri "/foo2"}
+             {:user-id 2 :uri "/foo4"}
+             {:user-id 3 :uri "/foo5"}
+             {:user-id 3 :uri "/account"}])
   (map identity (group-by (fn [x] (odd? (:user-id x)))
                           [{:user-id 1 :uri "/"}
                            {:user-id 2 :uri "/foo"}
@@ -232,9 +347,12 @@
         :when (even? y)]
     y)
 
-  (for [x (range 3) y (range 3)] [x y])
+  (for [x (range 3)
+        y (range 9)]
+    [x y])
 
-  (for [x (range 3) y (range 3) :when (not= x y)] [x y])
+  (for [x (range 3) y (range 3)
+        :when (not= x y)] [x y])
 
   (for [x (range 1 6)
         :let [y (* x x)
@@ -282,35 +400,55 @@
   ;; => {:female 3, :male 2}
 
   (frequencies (map :age students))
+  (frequencies (map :name students))
 
   )
 (comment
+  (clojure.string/join ";" ["abc" "def"])
   (def my-strings ["one" "two" "three"])
 
   (interpose ", " my-strings)
+  (apply str (interpose ", " my-strings))
   (interpose [] my-strings)
-  (interpose [] my-strings)
+  (interpose \| [1 2 4 {} #{}])
+  (apply str (interpose \| [1 2 4 {} #{}]))
 
   (apply str (interpose ", " my-strings))
 
   (interpose :orange [:green :red :green :red])
 
-  (interleave [:green :red :blue] [:yellow :magenta :cyan] [:a :b :c])
+  (interleave [:green :red]
+              [:yellow :magenta :cyan]
+              [:a :b :c :d])
   )
+
 (comment
   (sort [:a :z :h :e :w])
+  (sort [:a :z :h :e :w])
   (sort < [1 8 4 3 3 0 9])
+  (sort > [1 8 4 3 3 0 9])
 
-  (sort-by :age [{:age 65} {:age 13} {:age 8}])
+  (sort-by :age [{:name "a" :age 65}
+                 {:name "a" :age 13}
+                 {:name "a" :age 8}])
+
+  (sort-by :age > [{:name "a" :age 65}
+                   {:name "a" :age 13}
+                   {:name "a" :age 8}])
 
   (sort-by str [:f "s" \c 'u])
   )
+
 (comment
   (partition 3 (range 10))
+  (partition 3 5 (range 20))
+  (partition 5 3 (range 20))
+  (partition 4 3 (range 20))
   ;; ((0 1 2) (3 4 5) (6 7 8))
   (partition-all 3 (range 10))
 
-  (partition-by count (map str [12 11 8 2 100 102 105 1 3]))
+  (partition-by count
+                (map str [12 11 8 2 100 102 105 1 3]))
 
   (partition 3 3 (range 10))
 
@@ -320,6 +458,7 @@
 
   (distinct [1 2 1 1 3 2 4 1])
   (distinct? 1 2 3 2 4 1)
+  (distinct? 1 2 3 4)
   (dedupe [1 2 1 1 3 2 4 1])
 
   )
@@ -331,10 +470,11 @@
   (clojure.set/union #{1 2 3} #{2 3 4 5})
   ;; => #{1 4 3 2 5}
 
-  (clojure.set/intersection #{2 3 4 5} #{1 2 3} )
+  (clojure.set/intersection #{2 3 4 5} #{1 2 3})
   ;; => #{3 2}
 
-  (clojure.set/difference #{2 3 4 5} #{1 2 3} )
+  (clojure.set/difference #{2 3 4 5} #{1 2 3})
+  (clojure.set/difference #{1 2 3} #{2 3 4 5} )
   )
 (comment
   ;; Exercicios Sequences
@@ -343,6 +483,7 @@
 
 
   ;;; Cartesian products of two sets
+
 
 
   (#(set
@@ -363,4 +504,54 @@
      (filter odd? (range 10))
      (for [x (range 10) :when (odd? x)]
        x))
+  )
+
+(comment
+  (defn fibo
+    ([n]
+     (fibo [0N 1N] n))
+    ([xs n]
+     (if (<= n (count xs))
+       xs
+       (let [x'  (+ (last xs)
+                    (nth xs (- (count xs) 2)))
+             xs' (conj xs x')]
+         (fibo xs' n)))))
+
+  (last (fibo 100))
+
+  (last (fibo 10000))
+  (last (fibo 30000))
+
+  (last (fibo 30822))
+
+  (defn fibo-recur
+    ([n]
+     (fibo-recur [0N 1N] n))
+    ([xs n]
+     (if (<= n (count xs))
+       xs
+       (let [x'  (+ (last xs)
+                    (nth xs (- (count xs) 2)))
+             xs' (conj xs x')]
+         (recur xs' n)))))
+
+  (last (fibo-recur 30822))
+
+  (last (fibo-recur 30822))
+
+  (last (fibo-recur 40000))
+
+  (last (fibo-recur 50000))
+
+  (defn fibo-loop [n]
+    (loop [xs [0N 1N]
+           n  n]
+      (if (<= n (count xs))
+        xs
+        (let [x'  (+ (last xs)
+                     (nth xs (- (count xs) 2)))
+              xs' (conj xs x')]
+          (recur xs' n)))))
+
   )
