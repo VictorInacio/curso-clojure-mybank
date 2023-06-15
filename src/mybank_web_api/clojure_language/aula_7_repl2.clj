@@ -154,7 +154,7 @@
   (println "I got" a "from" all)
   (println "Where is x?" x))
 
-(let [{name2        :name
+(let [{name2       :name
        location    :location
        description :description} client]
   (println name location "-" description))
@@ -209,7 +209,7 @@
 (let [{joe-state :joe} multiplayer-game-state]
   (println joe-state)
   )
-(let [{{:keys          [class]
+(let [{{:keys  [class]
         weapon :weapon} :joe} multiplayer-game-state]
   (println "Joe is a" class "wielding a" weapon)
   ;(println "weapon power is" power)
@@ -273,7 +273,7 @@
 
 (defn calculate* []
   (->> (range 10)
-       (filter odd? )
+       (filter odd?)
        (map #(* % %))
        (reduce +)))
 
@@ -363,19 +363,23 @@
 (next '(3))
 
 (defn reduce* [rf accum coll]
-   (if (seq coll)
-     (let [[head & tail] coll
-           accum (rf accum head)]
-       (recur rf accum tail))
-     accum))
+  (if (seq coll)
+    (let [[head & tail] coll
+          accum (rf accum head)]
+      (recur rf accum tail))
+    accum))
 
-(reduce* + 10 [1 2 3])
+(reduce* (fn [acc head]
+           (if (< acc 15)
+             (+ acc head)
+             (reduced acc))) 10 [1 2 3 4])
 
 (reduce* (fn [acc head]
            (if (< acc 15)
              (+ acc head)
              (reduced acc)))
          10 [1 2 3])
+
 
 (defn reduce* [rf accum coll]
   (if (seq coll)
@@ -385,6 +389,57 @@
         result
         (recur rf result tail)))
     accum))
+
+(reduce* (fn [acc head]
+           (if (<= acc 10)
+             (reduced acc)
+             (+ acc head)))
+         10 [1 2 3 4 5])
+
+
+(defn reduce***
+  ([rf coll]
+   (reduce*** rf
+              (first coll)
+              (rest coll)))
+  ([rf accum coll]
+   (if (seq coll)
+     (let [[head & tail] coll
+           result (rf accum head)]
+       (if (reduced? result)
+         (unreduced result)
+         (recur rf result tail)))
+     accum)))
+
+(reduce*** (fn [acc head]
+             (if (<= acc 10)
+               (reduced acc)
+               (+ acc head)))
+           10 [1 2 3])
+
+(def red (reduced 0))
+(unreduced red)
+
+(< 10 1)
+
+(reduce* (fn [acc head]
+           (if (<= acc 10)
+             (reduced acc)
+             (+ acc head)))
+         10 [1 2 3])
+
+(reduce* (fn [acc head]
+           (if (<= acc 10)
+             (reduced acc)
+             (+ acc head)))
+         [1 2 3])
+
+(reduce** (fn [acc head]
+            (if (<= acc 10)
+              (reduced acc)
+              (+ acc head)))
+          10 [1 2 3])
+
 
 (reduce
   (fn [flattened [k v]]
@@ -411,5 +466,12 @@
 (map inc)                                                   ;; returns a mapping transducer for incrementing
 (take 5)                                                    ;; returns a transducer that will take the first 5 values
 
+
+
+(defmulti calc [x] (type x))
+
+(defmethod calc java.lang.String
+  [x]
+  (println x))
 
 
