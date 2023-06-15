@@ -81,7 +81,7 @@
 
   (def my-line [[5 10] [10 20]])
 
-  (let [[[x1 y1][x2 y2]] my-line]
+  (let [[[x1 y1] [x2 y2]] my-line]
     (println "Line from (" x1 "," y1 ") to (" x2 ", " y2 ")"))
 
   (let [[[a b :as group1] [c d :as group2]] my-line]
@@ -91,17 +91,17 @@
 
   "Associative"
 
-  (def client {:name "Super Co."
-               :location "Philadelphia"
+  (def client {:name        "Super Co."
+               :location    "Philadelphia"
                :description "The worldwide leader in plastic tableware."})
 
-  (let [name (:name client)
-        location (:location client)
+  (let [name        (:name client)
+        location    (:location client)
         description (:description client)]
     (println name location "-" description))
 
-  (let [{name :name
-         location :location
+  (let [{name        :name
+         location    :location
          description :description} client]
     (println name location "-" description))
 
@@ -133,15 +133,15 @@
     (println first-name last-name))
 
   (def multiplayer-game-state
-    {:joe {:class "Ranger"
-           :weapon "Longbow"
-           :score 100}
-     :jane {:class "Knight"
+    {:joe  {:class  "Ranger"
+            :weapon "Longbow"
+            :score  100}
+     :jane {:class  "Knight"
             :weapon "Greatsword"
-            :score 140}
-     :ryan {:class "Wizard"
+            :score  140}
+     :ryan {:class  "Wizard"
             :weapon "Mystic Staff"
-            :score 150}})
+            :score  150}})
 
   (let [{{:keys [class weapon]} :joe} multiplayer-game-state]
     (println "Joe is a" class "wielding a" weapon))
@@ -157,7 +157,7 @@
   (configure 12 :debug true)
 
   (defn configure [val & {:keys [debug verbose]
-                          :or {debug false, verbose false}}]
+                          :or   {debug false, verbose false}}]
     (println "val =" val " debug =" debug " verbose =" verbose))
 
   (configure 10)
@@ -178,20 +178,20 @@
 
   "Namespaced"
 
-  (def human {:person/name "Franklin"
-              :person/age 25
+  (def human {:person/name   "Franklin"
+              :person/age    25
               :hobby/hobbies "running"})
-  (let [{:keys [hobby/hobbies]
+  (let [{:keys        [hobby/hobbies]
          :person/keys [name age]
-         :or {age 0}} human]
+         :or          {age 0}} human]
     (println name "is" age "and likes" hobbies))
 
   (def human {:person/name "Franklin"
-              :person/age 25
-              :hobby/name "running"})
+              :person/age  25
+              :hobby/name  "running"})
   (let [{:person/keys [age]
-         hobby-name :hobby/name
-         person-name :person/name} human]
+         hobby-name   :hobby/name
+         person-name  :person/name} human]
     (println person-name "is" age "and likes" hobby-name))
 
 
@@ -223,11 +223,11 @@
   (defn print-coordinates-3 [[x y z]]
     (println "x:" x ", y:" y ", z:" z))
 
-  (def john-smith {:f-name "John"
-                   :l-name "Smith"
-                   :phone "555-555-5555"
+  (def john-smith {:f-name  "John"
+                   :l-name  "Smith"
+                   :phone   "555-555-5555"
                    :company "Functional Industries"
-                   :title "Sith Lord of Git"})
+                   :title   "Sith Lord of Git"})
 
   (defn print-contact-info [{:keys [f-name l-name phone company title]}]
     (println f-name l-name "is the" title "at" company)
@@ -235,22 +235,22 @@
 
   (print-contact-info john-smith)
 
-  (def john-smith {:f-name "John"
-                   :l-name "Smith"
-                   :phone "555-555-5555"
+  (def john-smith {:f-name  "John"
+                   :l-name  "Smith"
+                   :phone   "555-555-5555"
                    :address {:street "452 Lisp Ln."
-                             :city "Macroville"
-                             :state "Kentucky"
-                             :zip "81321"}
+                             :city   "Macroville"
+                             :state  "Kentucky"
+                             :zip    "81321"}
                    :hobbies ["running" "hiking" "basketball"]
                    :company "Functional Industries"
-                   :title "Sith Lord of Git"})
+                   :title   "Sith Lord of Git"})
 
 
   (defn print-contact-info
-    [{:keys [f-name l-name phone company title]
+    [{:keys                           [f-name l-name phone company title]
       {:keys [street city state zip]} :address
-      [fav-hobby second-hobby] :hobbies}]
+      [fav-hobby second-hobby]        :hobbies}]
     (println f-name l-name "is the" title "at" company)
     (println "You can reach him at" phone)
     (println "He lives at" street city state zip)
@@ -258,25 +258,11 @@
 
   (print-contact-info john-smith)
 
-
   )
 
 (comment
   "Map Reduce"
 
-  (defn calculate []
-    (reduce + (map #(* % %) (filter odd? (range 10)))))
-
-  (defn calculate* []
-    (->> (range 10)
-         (filter odd? ,,,)
-         (map #(* % %) ,,,)
-         (reduce + ,,,)))
-
-  (as-> [:foo :bar] v
-        (map name v)
-        (first v)
-        (.substring v 1))
 
   (map inc [0 1 2 3])
 
@@ -296,13 +282,18 @@
 
   (reduce + [1 2 3 4 5])
 
-  (reduce + [])
+  (+ (+ (+ (+ 1 2) 3) 4) 5)
 
-  (reduce + 1 [])
+  (reduce + [])
+  (+)
+
+  (reduce + 99 [1 2])
+
+  (+ (+ 99 1) 2)
 
   (reduce #(assoc %1 %2 (inc (%1 %2 0)))
           {}
-          (re-seq #"\w+" s))
+          (re-seq #"\w+" "aaaaaaaaa"))
 
 
   ;; Calculate primes until 1000
@@ -323,11 +314,31 @@
       (if (> sum 10) (reduced sum) sum)))
 
   (reduce + 0 (range 10))
+  (reductions + 0 (range 10))
   ;; => 45
 
   (reduce limit 0 (range 10))
   ;; => 15
 
+  ;; Implementing Reduce
+
+  (defn reduce* [rf accum coll]
+    (if (seq coll)
+      (let [[head & tail] coll
+            accum (rf accum head)]
+        (recur rf accum tail))
+      coll))
+
+  (defn reduce* [rf accum coll]
+    (if (seq coll)
+      (let [[head & tail] coll
+            result (rf accum head)]
+        (if (reduced? result)
+          result
+          (recur rf result tail)))
+      coll))
+
+  (reduced 1)
   ;; Reduce can be used to reimplement a map function:
 
   (defn map* [f & c]
@@ -344,82 +355,20 @@
 
   ;; => #{:m :c :f}
 
-  "Transducers https://www.youtube.com/watch?v=1sC71eb9Ox0"
 
+  (defn calculate []
+    (reduce + (map #(* % %) (filter odd? (range 10)))))
 
-  "reducing function signature
-  whatever, input -> whatever"
+  (defn calculate* []
+    (->> (range 10)
+         (filter odd?,,,)
+         (map #(* % %),,,)
+         (reduce +,,,)))
 
-  "
-  The following functions produce a transducer when the input collection is omitted:
-
-  map cat mapcat filter remove take take-while take-nth drop drop-while replace
-  partition-by partition-all keep keep-indexed map-indexed distinct interpose dedupe random-sample
-  "
-  (filter odd?) ;; returns a transducer that filters odd
-  (map inc)     ;; returns a mapping transducer for incrementing
-  (take 5)      ;; returns a transducer that will take the first 5 values
-
-  (def xf
-    (comp
-      (filter odd?)
-      (map inc)
-      (take 5)))
-
-  (->> (range 10)
-       (filter odd?)
-       (map inc)
-       (take 5))
-
-
-  (def xf-using-partial (comp
-                          (partial filter even?)
-                          (partial map inc)))
-
-  (xf-using-partial (vec (range 10)))
-
-  (def xf (map inc))
-
-  (transduce xf conj [0 1 2])
-
-  (transduce xf conj () [0 1 2])
-
-  (def xf (comp
-            (map inc)
-            (filter even?)))
-
-  (transduce xf conj (range 10))
-
-  (into [] xf (range 10))
-
-  (into () xf (range 10))
-
-  (sequence xf (range 10))
-
-  (defn map
-    ([f]
-     (fn [step]
-       (fn
-         ([] (step))
-         ([result] (step result))
-         ([result input]
-          (step result (f input))))))
-    ([f coll]
-     (sequence (map f) coll)))
-
-  (defn filter
-    ([p?]
-     (fn [step]
-       (fn
-         ([] (step))
-         ([result] (step result))
-         ([result input]
-          (if (p? input)
-            (step result input)
-            result)))))
-    ([p? coll]
-     (sequence (filter p?) coll)))
-
-
+  (as-> [:foo :bar] v
+        (map name v)
+        (first v)
+        (.substring v 1))
 
   )
+
