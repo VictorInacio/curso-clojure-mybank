@@ -1,12 +1,10 @@
 (ns mybank-web-api.clojure-language.aula8_1)
 
-(require '[clojure.java.io])
-
 (defn parse-line [line]
   (let [tokens (.split (.toLowerCase line) " ")]
     (map #(vector % 1) tokens)))
 
-(parse-line "O homem que diz sou não é")
+(parse-line "O a homem que diz sou não é")
 
 (defn combine [mapped]
   (->> (apply concat mapped)
@@ -21,17 +19,13 @@
       slurp
       clojure.string/split-lines))
 
-(combine
-  (map parse-line
-       (-> "/Users/victorinacio/ada/rehearsal/curso-clojure-mybank/canto.txt"
-           slurp)))
 
 (comment
   (->> "/Users/victorinacio/ada/rehearsal/curso-clojure-mybank/canto.txt"
-       slurp
-       clojure.string/split-lines
+       read-lines
        (map parse-line)
        combine)
+
   )
 
 (defn sum [[k v]]
@@ -62,12 +56,13 @@
 (word-frequency-mr "/Users/victorinacio/ada/rehearsal/curso-clojure-mybank/canto.txt")
 
 
+;;;; AVG
 
-(def IGNORE "_")
+(def any-word "_")
 
 (defn parse-line [line]
   (let [tokens (.split (.toLowerCase line) " ")]
-    [[IGNORE (count tokens)]]))
+    [[any-word (count tokens)]]))
 
 (defn average [numbers]
   (/ (apply + numbers)
