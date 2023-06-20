@@ -1,10 +1,7 @@
 (ns mybank-web-api.core
   (:require [io.pedestal.http :as http]
             [io.pedestal.http.route :as route]
-            [io.pedestal.test :as test-http]
-            [clojure.pprint :as pp]
-            [mybank-web-api.model :as model]
-            )
+            [io.pedestal.test :as test-http])
   (:gen-class))
 
 (defonce contas (atom {:1 {:saldo 100}
@@ -13,7 +10,8 @@
 
 (defn get-saldo [request]
   (let [id-conta (-> request :path-params :id keyword)]
-    {:status 200 :body {:result (id-conta @contas "conta inválida!")}}))
+    {:status 200
+     :body {:result (id-conta @contas "conta inválida!")}}))
 
 (defn make-deposit [request]
   (let [id-conta       (-> request :path-params :id keyword)

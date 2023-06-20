@@ -10,7 +10,9 @@
                  [org.slf4j/slf4j-simple "1.7.28"]
                  [prismatic/schema "1.4.1"]
                  [aleph "0.6.2"]
-                 [hato "0.9.0"]]
+                 [hato "0.9.0"]
+                 [org.apache.kafka/kafka-clients "2.7.0"]
+                 [clj-http "3.12.0"]]
   :main ^:skip-aot mybank-web-api.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot      :all

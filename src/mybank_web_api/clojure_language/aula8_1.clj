@@ -4,7 +4,22 @@
   (let [tokens (.split (.toLowerCase line) " ")]
     (map #(vector % 1) tokens)))
 
-(parse-line "O a homem que diz sou não é")
+(parse-line "O é homem que diz sou não é")
+
+(->> [(parse-line "texto palavra palavro")
+      (parse-line "texto palavra ")
+      (parse-line "texto")]
+     (apply concat)
+     (group-by first)
+     (map (fn [[k v]]
+            {k (map second v)}))
+     (apply merge-with conj)
+
+     (merge-with conj {"texto" '(1 1)}
+                 {"texto2" '(1 1)})
+
+     (map second [["texto" 1] ["texto" 1]])
+     )
 
 (defn combine [mapped]
   (->> (apply concat mapped)
@@ -30,6 +45,9 @@
 
 (defn sum [[k v]]
   {k (apply + v)})
+
+[(sum ["de" '(1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)])
+ (sum ["tristeza" '(1 1 1)])]
 
 (defn reduce-parsed-lines [collected-values]
   (apply merge (map sum collected-values)))
@@ -74,11 +92,15 @@
 (defn average-line-length [filename]
   (map-reduce parse-line reducer (read-lines filename)))
 
-(average-line-length "/Users/victorinacio/ada/rehearsal/curso-clojure-mybank/canto.txt")
 
+(float
+  (average-line-length "/Users/victorinacio/ada/rehearsal/curso-clojure-mybank/canto.txt"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(def replace-map {\( ""
+                  \) ""})
 
+(clojure.string/escape "(a) (b) (c)" replace-map)
 
 
 

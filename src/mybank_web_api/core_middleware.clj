@@ -10,8 +10,9 @@
   (i/interceptor
     {:name  ::odds
      :enter (fn [context]
-              (assoc context :response {:body   "Eu recebo números impares\n"
-                                        :status 200}))}))
+              (assoc context :response
+                             {:body   "Eu recebo números impares\n"
+                              :status 200}))}))
 
 (def par
   (i/interceptor
@@ -66,7 +67,7 @@
 (def par-ou-impar2
   {:name  ::par-ou-impar
    :enter (fn [context]
-            (let [n (-> context :request :query-params :n Integer/parseInt)
+            (let [n   (-> context :request :query-params :n Integer/parseInt)
                   nxt (if (even? n) par impar)]
               (chain/enqueue context [nxt])))})
 
