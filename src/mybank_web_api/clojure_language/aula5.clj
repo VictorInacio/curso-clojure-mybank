@@ -1,17 +1,36 @@
 (ns mybank-web-api.clojure-language.aula5)
 
-
-
-
 (def counter (atom 0))
-(defn inc-print [val] (println val))
 
-(def counter (atom 0))
+(defn inc-print
+  [val]
+  (println val)
+  (inc val))
+
+(def f (future
+         (do
+           (Thread/sleep 15000)
+           (+ 1 1))))
+
+(realized? f)
+(deref f)
+@f
+(future-cancel f)
+(future-cancelled? f)
+(future-done? f)
+
+(deref counter)
+@counter
+
+(reset! counter 2)
+
+(swap! counter inc)
+
 
 (let [n 2]
-  (future (dotimes [_ n] (swap! counter inc-print)))
-  (future (dotimes [_ n] (swap! counter inc-print)))
-  (future (dotimes [_ n] (swap! counter inc-print))))
+  (future (dotimes [_ n] (reset! counter (inc @counter))))
+  (future (dotimes [_ n] (reset! counter (inc @counter))))
+  (future (dotimes [_ n] (reset! counter (inc @counter)))))
 
 
 
@@ -40,6 +59,17 @@
 
 (deref a)
 
+(do
+  (reset! a 0)
+  (let [fs (for [_ (range 100)]
+             (future
+               (dotimes [_ 100]
+                 (reset! a (inc @a)))))]
+    (doseq [f fs]
+      @f))
+
+  (deref a))
+
 
 
 
@@ -61,28 +91,22 @@
 (deref a)
 
 
-
-
-
-
-
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(reset! a 0)
-(let [fs (for [_ (range 100)]
-           (future
-             (dotimes [_ 100]
-               (loop []
-                 (let [v @a]
-                   (when-not (compare-and-set! a v (inc v))
-                     (recur)))))))]
-  (doseq [f fs]
-    @f))
+(do
+  (reset! a 0)
+  (let [fs (for [_ (range 100)]
+             (future
+               (dotimes [_ 100]
+                 (loop []
+                   (let [v @a]
+                     (when-not (compare-and-set! a v (inc v))
+                       (println \.)
+                       (recur)))))))]
+    (doseq [f fs]
+      @f))
 
 
-(deref a)
+  (deref a))
 
 
 
@@ -184,7 +208,7 @@
 (deref p)
 
 (let [p (promise)]
-  (let [google {:url "https://amazon.com"
+  (let [google {:url       "https://amazon.com"
                 :site-name :google}
         news   "https://news.ycombinator.com"]
     (doseq [url [google news]]
@@ -222,7 +246,7 @@
     (println "task begin at" @begin-promise)
     (println "task end at" @end-promise)))
 
-(future (launch-timed + 1 2 3 ))
+(future (launch-timed + 1 2 3))
 
 
 ;; Delay
