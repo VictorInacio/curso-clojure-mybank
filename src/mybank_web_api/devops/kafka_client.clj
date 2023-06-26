@@ -1,6 +1,8 @@
 (ns mybank-web-api.devops.kafka-client
-  (:import [org.apache.kafka.clients.producer KafkaProducer ProducerRecord]
+  (:import (org.apache.kafka.clients.admin AdminClient)
+           [org.apache.kafka.clients.producer KafkaProducer ProducerRecord]
            [org.apache.kafka.clients.consumer KafkaConsumer ConsumerRecords ConsumerRecord]
+           [org.apache.kafka.clients.admin Admin]
            (org.apache.kafka.common TopicPartition)
            [org.apache.kafka.common.serialization Serdes]
            [org.apache.kafka.clients.producer.internals DefaultPartitioner]))
@@ -12,7 +14,6 @@
                "key.serializer"    "org.apache.kafka.common.serialization.StringSerializer"
                "value.serializer"  "org.apache.kafka.common.serialization.StringSerializer"}]
     (KafkaProducer. props)))
-
 
 (defn produce-message [producer topic key value]
   (.send ^KafkaProducer producer (ProducerRecord. topic key value)))
@@ -34,18 +35,32 @@
                  (.value record)
                  (.offset record))))))
 
+(defn create-admin []
+  (let [props {"bootstrap.servers"  "localhost:9092"}]
+    (Admin/create props)))
+
+(defn consume-messages [consumer topic]
+  (.subscribe ^KafkaConsumer consumer [topic])
+  (while true
+    (let [records (.poll consumer 1000)]
+      (doseq [^ConsumerRecord record (seq records)]
+        (println "Received message: "
+                 (.key record)
+                 (.value record)
+                 (.offset record))))))
 
 (comment
+  (def admin  (create-admin))
+  (.close admin)
+  (def tlist (.listTopics admin))
+  (.names tlist)
+
+
   (def producer (create-producer))
-
-
   (produce-message producer "quickstart-events" "chave test 101" (str "Mensagem do Clojure 20230623 " 101))
-
   (def iter (range 10))
-
   (doseq [n iter]
     (produce-message producer "quickstart-events" (str n) (str "Mensagem do Clojure SEQ " n)))
-
   (produce-message producer "quickstart-events" "chave test 101" (str "Mensagem do Clojure 20230623 " 101))
 
 
