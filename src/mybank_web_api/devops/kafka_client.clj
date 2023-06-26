@@ -1,5 +1,6 @@
 (ns mybank-web-api.devops.kafka-client
-  (:import (org.apache.kafka.clients.admin AdminClient)
+  (:import [org.apache.kafka.clients.admin AdminClient]
+           [java.util.concurrent TimeUnit]
            [org.apache.kafka.clients.producer KafkaProducer ProducerRecord]
            [org.apache.kafka.clients.consumer KafkaConsumer ConsumerRecords ConsumerRecord]
            [org.apache.kafka.clients.admin Admin]
@@ -7,7 +8,7 @@
            [org.apache.kafka.common.serialization Serdes]
            [org.apache.kafka.clients.producer.internals DefaultPartitioner]))
 
-(set! *warn-on-reflection* true)
+(set! *warn-on-reflection* false)
 
 (defn create-producer []
   (let [props {"bootstrap.servers" "localhost:9092"
@@ -51,9 +52,10 @@
 
 (comment
   (def admin  (create-admin))
-  (.close admin)
+  (.close admin 1000 TimeUnit/MILLISECONDS)
   (def tlist (.listTopics admin))
   (.names tlist)
+  (.crea tlist)
 
 
   (def producer (create-producer))
