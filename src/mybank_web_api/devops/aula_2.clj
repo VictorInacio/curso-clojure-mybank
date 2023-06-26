@@ -19,8 +19,13 @@
 
 "
 https://docs.confluent.io/platform/current/clients/examples/clojure.html
+https://github.com/AppsFlyer/ketu
 "
 
+
+"
+https://www.youtube.com/watch?v=eJFBbwCB6v4
+"
 
 (defn- build-properties [config-fname]
   (with-open [config (jio/reader config-fname)]
@@ -78,32 +83,30 @@ https://docs.confluent.io/platform/current/clients/examples/clojure.html
   (apply producer! args))
 
 
-"https://github.com/perkss/clojure-kafka-examples"
-
-
-(defn create-properties [map]
-  (let [properties (Properties.)]
-    (doseq [[key value] map]
-      (.setProperty properties (str key) (str value)))
-    properties))
-
-
-
-;; Output: "value1"
-
-(defn to-uppercase-topology [input-topic output-topic]
-  (let [builder (StreamsBuilder.)]
-    (->
-      (.stream builder input-topic)                         ;; Create the source node of the stream
-      (.mapValues (reify
-                    ValueMapper
-                    (apply [_ v]
-                      (clojure.string/upper-case v))))      ;; map the strings to uppercase
-      (.to output-topic))
-    builder))
-
 (comment
+  "https://github.com/perkss/clojure-kafka-examples"
 
+
+  (defn create-properties [map]
+    (let [properties (Properties.)]
+      (doseq [[key value] map]
+        (.setProperty properties (str key) (str value)))
+      properties))
+
+
+
+  ;; Output: "value1"
+
+  (defn to-uppercase-topology [input-topic output-topic]
+    (let [builder (StreamsBuilder.)]
+      (->
+        (.stream builder input-topic)                         ;; Create the source node of the stream
+        (.mapValues (reify
+                      ValueMapper
+                      (apply [_ v]
+                        (clojure.string/upper-case v))))      ;; map the strings to uppercase
+        (.to output-topic))
+      builder))
 
   (let [config-map {StreamsConfig/APPLICATION_ID_CONFIG,            "uppercase-processing-application"
                     StreamsConfig/BOOTSTRAP_SERVERS_CONFIG,         "localhost:9092"
