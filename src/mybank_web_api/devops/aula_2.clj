@@ -20,12 +20,17 @@
 "
 https://docs.confluent.io/platform/current/clients/examples/clojure.html
 https://github.com/AppsFlyer/ketu
-"
-
-
-"
+https://github.com/FundingCircle/jackdaw
 https://www.youtube.com/watch?v=eJFBbwCB6v4
 "
+
+(def ProducerConfigKeys {:KEY_SERIALIZER_CLASS_CONFIG   "key.serializer"
+                         :VALUE_SERIALIZER_CLASS_CONFIG "value.serializer"
+                         :1                             1
+                         :2                             2
+                         })
+
+(select-keys ProducerConfigKeys [:KEY_SERIALIZER_CLASS_CONFIG :VALUE_SERIALIZER_CLASS_CONFIG])
 
 (defn- build-properties [config-fname]
   (with-open [config (jio/reader config-fname)]
@@ -35,14 +40,35 @@ https://www.youtube.com/watch?v=eJFBbwCB6v4
          ProducerConfig/VALUE_SERIALIZER_CLASS_CONFIG "org.apache.kafka.common.serialization.StringSerializer"})
       (.load config))))
 
+"
+Method Call chaining
+Properties props = new Properties()
+props.putAll(....).load(config)
+
+(-> (Properties.)
+    (.bla args)
+"
+
 (defn- create-topic! [topic partitions replication cloud-config]
   (let [ac (AdminClient/create cloud-config)]
     (try
-      (.createTopics ac [(NewTopic. ^String topic  (int partitions) (short replication))])
+      (.createTopics ac [(NewTopic. ^String topic (int partitions) (short replication))])
       ;; Ignore TopicExistsException, which would get thrown if the topic was previously created
       (catch TopicExistsException e nil)
       (finally
         (.close ac)))))
+
+
+;'(h (k (t (f (g x)))))
+;'(comp h k t f g)
+;
+;(def [x] (-> x
+;             g
+;             f))
+
+
+(def str-pre (partial str "Failed to deliver message: "))
+(str-pre "oi oi" " ola ola")
 
 (defn producer! [config-fname topic]
   (let [props          (build-properties config-fname)
@@ -84,7 +110,9 @@ https://www.youtube.com/watch?v=eJFBbwCB6v4
 
 
 (comment
-  "https://github.com/perkss/clojure-kafka-examples"
+  "https://github.com/perkss/clojure-kafka-examples
+  https://developer.confluent.io/learn-kafka/kafka-streams/get-started/
+  "
 
 
   (defn create-properties [map]
@@ -100,23 +128,23 @@ https://www.youtube.com/watch?v=eJFBbwCB6v4
   (defn to-uppercase-topology [input-topic output-topic]
     (let [builder (StreamsBuilder.)]
       (->
-        (.stream builder input-topic)                         ;; Create the source node of the stream
+        (.stream builder input-topic)                       ;; Create the source node of the stream
         (.mapValues (reify
                       ValueMapper
                       (apply [_ v]
-                        (clojure.string/upper-case v))))      ;; map the strings to uppercase
+                        (clojure.string/upper-case v))))    ;; map the strings to uppercase
         (.to output-topic))
       builder))
 
-  (let [config-map {StreamsConfig/APPLICATION_ID_CONFIG,            "uppercase-processing-application"
-                    StreamsConfig/BOOTSTRAP_SERVERS_CONFIG,         "localhost:9092"
-                    StreamsConfig/DEFAULT_KEY_SERDE_CLASS_CONFIG,   (.getName (.getClass (Serdes/String)))
-                    StreamsConfig/DEFAULT_VALUE_SERDE_CLASS_CONFIG, (.getName (.getClass (Serdes/String)))}
+  (let [config-map   {StreamsConfig/APPLICATION_ID_CONFIG,            "uppercase-processing-application"
+                      StreamsConfig/BOOTSTRAP_SERVERS_CONFIG,         "localhost:9092"
+                      StreamsConfig/DEFAULT_KEY_SERDE_CLASS_CONFIG,   (.getName (.getClass (Serdes/String)))
+                      StreamsConfig/DEFAULT_VALUE_SERDE_CLASS_CONFIG, (.getName (.getClass (Serdes/String)))}
         config-map-j (create-properties config-map)
         input-topic  "plaintext-input"
         output-topic "uppercase"
         topology     (.build (to-uppercase-topology input-topic output-topic))]
-    (def streams      (KafkaStreams. ^Topology topology config-map-j))
+    (def streams (KafkaStreams. ^Topology topology config-map-j))
     (future (.start streams)))
 
   (.state streams)

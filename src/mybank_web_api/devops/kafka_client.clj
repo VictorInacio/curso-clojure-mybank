@@ -8,16 +8,26 @@
            [org.apache.kafka.common.serialization Serdes]
            [org.apache.kafka.clients.producer.internals DefaultPartitioner]))
 
-(set! *warn-on-reflection* false)
+(set! *warn-on-reflection* true)
 
 (defn create-producer []
   (let [props {"bootstrap.servers" "localhost:9092"
                "key.serializer"    "org.apache.kafka.common.serialization.StringSerializer"
                "value.serializer"  "org.apache.kafka.common.serialization.StringSerializer"}]
     (KafkaProducer. props)))
+"
+Constructor Method call
+KafkaProducer prod = new KafkaProducer(props)
+"
 
 (defn produce-message [producer topic key value]
   (.send ^KafkaProducer producer (ProducerRecord. topic key value)))
+
+"
+Instance Method
+prod.send(.. ... ..)
+
+"
 
 (defn create-consumer []
   (let [props {"bootstrap.servers"  "localhost:9092"
@@ -29,7 +39,7 @@
 (defn consume-messages [consumer topic]
   (.subscribe ^KafkaConsumer consumer [topic])
   (while true
-    (let [records (.poll consumer 1000)]
+    (let [records (.poll ^KafkaConsumer consumer 1000)]
       (doseq [^ConsumerRecord record (seq records)]
         (println "Received message: "
                  (.key record)
@@ -40,15 +50,12 @@
   (let [props {"bootstrap.servers"  "localhost:9092"}]
     (Admin/create props)))
 
-(defn consume-messages [consumer topic]
-  (.subscribe ^KafkaConsumer consumer [topic])
-  (while true
-    (let [records (.poll consumer 1000)]
-      (doseq [^ConsumerRecord record (seq records)]
-        (println "Received message: "
-                 (.key record)
-                 (.value record)
-                 (.offset record))))))
+"
+Admin.create()
+(Thread/sleep)
+"
+
+
 
 (comment
   (def admin  (create-admin))
@@ -57,14 +64,23 @@
   (.names tlist)
   (.crea tlist)
 
+  (doto (create-admin)
+    (.names tlist)
+    (.close 1000 TimeUnit/MILLISECONDS))
+
 
   (def producer (create-producer))
   (produce-message producer "quickstart-events" "chave test 101" (str "Mensagem do Clojure 20230623 " 101))
-  (def iter (range 10))
-  (doseq [n iter]
-    (produce-message producer "quickstart-events" (str n) (str "Mensagem do Clojure SEQ " n)))
-  (produce-message producer "quickstart-events" "chave test 101" (str "Mensagem do Clojure 20230623 " 101))
+  (produce-message producer "plaintext-input" "k1" (str "Mensagem do Clojure 20230626 " 202))
+  (doseq [n (range 100000)]
+    )
 
+  (for [i (range 100)]
+    (future
+      (dotimes [n 100]
+        (produce-message producer "plaintext-input2"
+                         (str (* i n))
+                         (str "Mensagem do Clojure SEQ " (* i n))))))
 
 
   ;;;;;;;;;;;;;;;;;;;
