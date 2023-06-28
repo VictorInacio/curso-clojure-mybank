@@ -2,7 +2,8 @@
   (:require [clojure.tools.logging :as log]
             [environ.core :refer [env]])
   (:import [org.apache.kafka.clients.admin AdminClientConfig NewTopic KafkaAdminClient]
-           org.apache.kafka.clients.consumer.KafkaConsumer
+           [org.apache.kafka.clients.consumer KafkaConsumer]
+           [org.apache.kafka.clients.consumer ConsumerRecord]
            [org.apache.kafka.clients.producer KafkaProducer ProducerRecord]
            [org.apache.kafka.common.serialization StringDeserializer StringSerializer]
            (org.apache.kafka.common TopicPartition)
@@ -14,7 +15,8 @@
   [bootstrap-server topics ^Integer partitions ^Short replication]
   (let [config      {AdminClientConfig/BOOTSTRAP_SERVERS_CONFIG bootstrap-server}
         adminClient (KafkaAdminClient/create config)
-        new-topics  (map (fn [^String topic-name] (NewTopic. topic-name partitions replication)) topics)]
+        new-topics  (map (fn [^String topic-name]
+                           (NewTopic. topic-name partitions replication)) topics)]
     (.createTopics adminClient new-topics)))
 
 (defn- pending-messages
@@ -26,12 +28,20 @@
                           value    (val topic-partition)]
                       (< position value)))
                   end-offsets))))
-
+(defn parse-consumer-record
+  [^ConsumerRecord record]
+  {:key       (.key record)
+   :value     (.value record)
+   :offset    (.offset record)
+   :topic     (.topic record)
+   :partition (.partition record)
+   :timestamp (.timestamp record)}
+  )
 (defn search-topic-by-key
   "Searches through Kafka topic and returns those matching the key"
   [^KafkaConsumer consumer topic search-key]
   (let [topic-partitions (->> (.partitionsFor consumer topic)
-                              (map #(TopicPartition. (.topic %) (.partition %))))
+                              (map #(TopicPartition. (.topic %) (.partition %)),,,))
         _                (.assign consumer topic-partitions)
         _                (.seekToBeginning consumer (.assignment consumer))
         end-offsets      (.endOffsets consumer (.assignment consumer))
@@ -42,9 +52,11 @@
       (printf "Pending messages? %s \n" (pending-messages end-offsets consumer))
       (let [records            (.poll consumer (Duration/ofMillis 50))
             matched-search-key (filter #(= (.key %) search-key) records)]
-        (conj! found-records matched-search-key)
+        (doseq [record-m (mapv parse-consumer-record matched-search-key)]
+          (conj! found-records record-m))
         (doseq [record matched-search-key]
-          (printf "Searched %s Found Matching Key %s Value %s \n" search-key (.key record) (.value record)))))
+          (let [{:keys [key value]} (parse-consumer-record record)]
+            (printf "Searched %s Found Matching Key %s Value %s \n" search-key key value)))))
     (persistent! found-records)))
 
 (defn build-consumer

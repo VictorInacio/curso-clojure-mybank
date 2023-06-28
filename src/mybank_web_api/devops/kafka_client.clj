@@ -51,7 +51,7 @@ prod.send(.. ... ..)
     (Admin/create props)))
 
 "
-Admin.create()
+Admin.create(props)
 (Thread/sleep)
 "
 
