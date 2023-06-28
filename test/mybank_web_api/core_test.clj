@@ -1,8 +1,4 @@
 (ns mybank-web-api.core-test
-  (:require [clojure.test :refer :all]
-            [mybank-web-api.core :refer :all])
-
-
   (:require [clojure.test :refer [deftest testing is] :as test]
             [mybank-web-api.devops.topic-replica :refer [build-consumer build-producer run-application consumer-subscribe]])
   (:import (org.testcontainers.containers KafkaContainer)
