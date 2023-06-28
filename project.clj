@@ -11,8 +11,18 @@
                  [prismatic/schema "1.4.1"]
                  [aleph "0.6.2"]
                  [hato "0.9.0"]
-                 [org.apache.kafka/kafka-clients "2.7.0"]
-                 [clj-http "3.12.0"]]
+                 [clj-http "3.12.0"]
+
+
+                 [environ "1.1.0"]
+                 [org.apache.kafka/kafka-clients "3.4.0"]
+                 [org.apache.kafka/kafka_2.12 "3.4.0"]
+                 [org.clojure/tools.logging "1.2.4"]
+                 [org.slf4j/slf4j-log4j12 "2.0.7"]
+                 [org.apache.logging.log4j/log4j-core "2.20.0"]
+                 [org.testcontainers/testcontainers "1.15.3"]
+                 [org.testcontainers/kafka "1.15.3"]
+                 [net.java.dev.jna/jna "5.7.0"]]
   :main ^:skip-aot mybank-web-api.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot      :all

@@ -1,35 +1,33 @@
 (ns mybank-web-api.core-test
   (:require [clojure.test :refer :all]
-            [mybank-web-api.core :refer :all]))
+            [mybank-web-api.core :refer :all])
 
 
-(deftest a-test
-  (testing "FIXED, I will not fail."
-    (is (fn? (get-in [:a :b] (s/check
-                               Data
-                               {:a {:b ["abc"]
-                                    :c 123}
-                                :d [{:e :bc
-                                     :f [12.2 13 100]}
-                                    {:e :bc
-                                     :f [-1]}]}))))))
+  (:require [clojure.test :refer [deftest testing is] :as test]
+            [mybank-web-api.devops.topic-replica :refer [build-consumer build-producer run-application consumer-subscribe]])
+  (:import (org.testcontainers.containers KafkaContainer)
+           (org.apache.kafka.clients.producer ProducerRecord)
+           (org.testcontainers.utility DockerImageName)))
 
 
-(deftest api-test
-  (testing "Verificar ."
-    (is (= (do (start) (test-request server :get "/greet"))
-           {:status  200,
-            :body    "Olá Pedestal!",
-            :headers {"Strict-Transport-Security"         "max-age=31536000; includeSubdomains",
-                      "X-Frame-Options"                   "DENY",
-                      "X-Content-Type-Options"            "nosniff",
-                      "X-XSS-Protection"                  "1; mode=block",
-                      "X-Download-Options"                "noopen",
-                      "X-Permitted-Cross-Domain-Policies" "none",
-                      "Content-Security-Policy"           "object-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' https: http:;",
-                      "Content-Type"                      "text/plain"}}
+(deftest example-kafka-integration-test
+  (testing "Fire up test containers Kafka and then send and consume message"
+    (let
+      [kafka-container (KafkaContainer. (DockerImageName/parse "confluentinc/cp-kafka:5.5.3"))
+       _ (.start kafka-container)
+       bootstrap-server (.getBootstrapServers kafka-container)
+       test-producer (build-producer bootstrap-server)
+       _ (future (run-application bootstrap-server))        ; execute application in separate thread
+       producer-topic "example-consumer-topic"
+       test-consumer (build-consumer bootstrap-server)
+       _ (consumer-subscribe test-consumer "example-produced-topic")
+       input-data "hello"
+       sent-result (.get (.send test-producer (ProducerRecord. producer-topic input-data)))
+       records (.poll test-consumer 10000)]
+      (is (= producer-topic (.topic sent-result)))
+      (doseq [record records]
+        (is (= (format "Processed Value: %s" input-data) (.value record)))))))
 
-           ))))
 
-(run-all-tests)
-
+(comment
+  (test/run-tests 'mybank-web-api.core-test))
