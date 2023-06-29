@@ -9,7 +9,6 @@
            (org.apache.kafka.common TopicPartition)
            (java.time Duration)))
 
-
 (defn create-topics!
   "Create the topic "
   [bootstrap-server topics ^Integer partitions ^Short replication]
@@ -108,55 +107,7 @@ from the provided kafka topic name"
           (.send producer (ProducerRecord. producer-topic (.key record) (str "Processed Value: " (.value record))))))
       (.commitAsync consumer))))
 
-
 (comment
-  (def consumer-topic "generic-messages")
-  (def key->topic {:client "client-messages"
-                   :vendor "vendor-messages"
-                   :infra  "log-messages"})
-  (vals key->topic)
-  (concat [consumer-topic]
-          (vals key->topic))
-
-  )
-
-
-(defn run-application-key-topic
-  "Create the simple read and write topology with Kafka"
-  [bootstrap-server]
-  (let [key->topic       {"client" "client-messages"
-                          "vendor" "vendor-messages"
-                          "infra"  "log-messages"}
-        consumer-topic   "generic-messages"
-        bootstrap-server (env :bootstrap-server bootstrap-server)
-        consumer         (build-consumer bootstrap-server)
-        producer         (build-producer bootstrap-server)]
-    (create-topics! bootstrap-server (concat [consumer-topic]
-                                             (vals key->topic)) 1 1)
-    (consumer-subscribe consumer consumer-topic)
-    (while true
-      (let [records (.poll consumer (Duration/ofMillis 1000))]
-        (println "POOL")
-        (doseq [record records]
-          (let [record         (parse-consumer-record record)
-                _              (println "Record -> " record)
-                record-key     (:key record)
-                _              (println "Key -> " record-key " type ->" (type record-key))
-                producer-topic (key->topic record-key)
-                _              (println "Prod topic -> " producer-topic)]
-            (println "Sending on value" (str "Processed Value: " (:value record)))
-            (.send producer (ProducerRecord. producer-topic (str record-key)
-                                             (str "Processed Value: "
-                                                  (:value record)))))))
-      (.commitAsync consumer))))
-
-(comment
-  (def bootstrap-server "localhost:9092")
-  (def app-future (future (run-application-key-topic bootstrap-server)))
-  (def producer (build-producer bootstrap-server))
-  (.send producer (ProducerRecord. "generic-messages" (str "client")
-                                   "Client event here!"))
-
   (def bootstrap-server "localhost:9092")
   (def consumer-topic "example-consumer-topic")
   (def producer-topic "example-produced-topic")
@@ -219,8 +170,17 @@ from the provided kafka topic name"
   (run-application "localhost:9092")
   )
 
+(comment
+  ;(def bootstrap-server "localhost:9092")
+  ;(def app-future (future (run-application-key-topic bootstrap-server)))
+  ;(def producer (build-producer bootstrap-server))
+  ;(.send producer (ProducerRecord. "generic-messages" (str "client")
+  ;                                 "Client event here!"))
+  ;(future-cancel app-future)
+  )
 
 (defn -main
   [& args]
-  (.addShutdownHook (Runtime/getRuntime) (Thread. #(log/info "Shutting down")))
+  (.addShutdownHook (Runtime/getRuntime)
+                    (Thread. ^Runnable #(log/info "Shutting down")))
   (run-application "localhost:9092"))
