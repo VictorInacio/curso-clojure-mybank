@@ -103,6 +103,7 @@ Admin.create(props)
   (.subscription consumer)
 
   (def result (.poll consumer 1000))
+  (.commit)
   (def result-seq (seq result))
 
   (def record (first result-seq))

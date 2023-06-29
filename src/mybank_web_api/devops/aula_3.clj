@@ -35,8 +35,7 @@
    :offset    (.offset record)
    :topic     (.topic record)
    :partition (.partition record)
-   :timestamp (.timestamp record)}
-  )
+   :timestamp (.timestamp record)})
 
 (defn search-topic-by-key
   "Searches through Kafka topic and returns those matching the key"
@@ -91,14 +90,14 @@ from the provided kafka topic name"
   (let [consumer-topic   "example-consumer-topic"
         producer-topic   "example-produced-topic"
         bootstrap-server (env :bootstrap-server bootstrap-server)
-        replay-consumer  (build-consumer bootstrap-server)
+        ;replay-consumer  (build-consumer bootstrap-server)
         consumer         (build-consumer bootstrap-server)
         producer         (build-producer bootstrap-server)]
     (printf "Creating the topics %s \n" [producer-topic consumer-topic])
     (create-topics! bootstrap-server [producer-topic consumer-topic] 1 1)
     (printf "Starting the kafka example app. With topic consuming topic %s and producing to %s \n"
             consumer-topic producer-topic)
-    (search-topic-by-key replay-consumer consumer-topic "1")
+    ;(search-topic-by-key replay-consumer consumer-topic "1")
     (consumer-subscribe consumer consumer-topic)
     (while true
       (let [records (.poll consumer (Duration/ofMillis 100))]
@@ -108,6 +107,10 @@ from the provided kafka topic name"
       (.commitAsync consumer))))
 
 (comment
+  (def fut-app (future (run-application "localhost:9092")))
+
+
+
   (def bootstrap-server "localhost:9092")
   (def consumer-topic "example-consumer-topic")
   (def producer-topic "example-produced-topic")
@@ -124,7 +127,7 @@ from the provided kafka topic name"
   (doseq [record records]
     (println "Sending on value" (str "Processed Value: " (.value record)))
     (.send producer (ProducerRecord. producer-topic "a" (str "Processed Value: " (.value record)))))
-  
+
   (->>
     (let [bootstrap-server "localhost:9092"
           consumer-topic   "example-consumer-topic"
@@ -153,8 +156,6 @@ from the provided kafka topic name"
   (future-cancel f)
   (future-done? f)
   (future-cancelled? f)
-
-  (run-application "localhost:9092")
   )
 
 (comment
