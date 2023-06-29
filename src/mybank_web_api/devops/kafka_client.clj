@@ -70,6 +70,7 @@ Admin.create(props)
 
 
 (comment
+  ;;;;;;;;;; Admin API ;;;;;;;;;
   (def admin  (create-admin))
   (.close admin 1000 TimeUnit/MILLISECONDS)
   (def tlist (.listTopics admin))
@@ -79,14 +80,14 @@ Admin.create(props)
     (.names tlist)
     (.close 1000 TimeUnit/MILLISECONDS))
 
+  (create-topics! admin ["topic1" "topic1"] 1 1)
   (delete-topics! admin ["generic-messages"])
 
 
+  ;;;;;;;;  Producer API ;;;;;;;;;;;
   (def producer (create-producer))
   (produce-message producer "turma-async" "chave" (str "Mensagem do Clojure 20230629 " 222))
   (produce-message producer "plaintext-input" "k1" (str "Mensagem do Clojure 20230626 " 202))
-  (doseq [n (range 100000)]
-    )
 
   (for [i (range 100)]
     (future
@@ -95,8 +96,7 @@ Admin.create(props)
                          (str (* i n))
                          (str "Mensagem do Clojure SEQ " (* i n))))))
 
-
-  ;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;  Consumer API ;;;;;;;;;;;
 
   (def consumer (create-consumer))
   (.subscribe consumer ["turma-async"])
@@ -123,6 +123,4 @@ Admin.create(props)
   (.seekToBeginning ^KafkaConsumer consumer (TopicPartition. "quickstart-events" 0))
   (.seekToEnd ^KafkaConsumer consumer (TopicPartition. "quickstart-events" 0))
   (.groupMetadata consumer)
-  (.position consumer (TopicPartition. "quickstart-events" 0))
-
-  )
+  (.position consumer (TopicPartition. "quickstart-events" 0)))
