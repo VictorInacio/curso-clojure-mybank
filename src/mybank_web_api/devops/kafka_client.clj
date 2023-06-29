@@ -3,18 +3,19 @@
            [java.util.concurrent TimeUnit]
            [org.apache.kafka.clients.producer KafkaProducer ProducerRecord]
            [org.apache.kafka.clients.consumer KafkaConsumer ConsumerRecords ConsumerRecord]
-           [org.apache.kafka.clients.admin Admin]
+           [org.apache.kafka.clients.admin Admin NewTopic AdminClientConfig]
            (org.apache.kafka.common TopicPartition)
            [org.apache.kafka.common.serialization Serdes]
            [org.apache.kafka.clients.producer.internals DefaultPartitioner]))
 
-(set! *warn-on-reflection* true)
+(set! *warn-on-reflection* false)
 
 (defn create-producer []
   (let [props {"bootstrap.servers" "localhost:9092"
                "key.serializer"    "org.apache.kafka.common.serialization.StringSerializer"
                "value.serializer"  "org.apache.kafka.common.serialization.StringSerializer"}]
     (KafkaProducer. props)))
+
 "
 Constructor Method call
 KafkaProducer prod = new KafkaProducer(props)
@@ -54,6 +55,17 @@ prod.send(.. ... ..)
 Admin.create(props)
 (Thread/sleep)
 "
+(defn create-topics!
+  "Create the topic "
+  [admin topics ^Integer partitions ^Short replication]
+  (let [new-topics  (map (fn [^String topic-name]
+                           (NewTopic. topic-name partitions replication)) topics)]
+    (.createTopics admin new-topics)))
+
+(defn delete-topics!
+  "Create the topic "
+  [admin deleting-topics]
+  (.deleteTopics admin deleting-topics))
 
 
 
@@ -62,15 +74,16 @@ Admin.create(props)
   (.close admin 1000 TimeUnit/MILLISECONDS)
   (def tlist (.listTopics admin))
   (.names tlist)
-  (.crea tlist)
 
   (doto (create-admin)
     (.names tlist)
     (.close 1000 TimeUnit/MILLISECONDS))
 
+  (delete-topics! admin ["generic-messages"])
+
 
   (def producer (create-producer))
-  (produce-message producer "quickstart-events" "chave test 101" (str "Mensagem do Clojure 20230623 " 101))
+  (produce-message producer "turma-async" "chave" (str "Mensagem do Clojure 20230629 " 222))
   (produce-message producer "plaintext-input" "k1" (str "Mensagem do Clojure 20230626 " 202))
   (doseq [n (range 100000)]
     )
@@ -86,13 +99,16 @@ Admin.create(props)
   ;;;;;;;;;;;;;;;;;;;
 
   (def consumer (create-consumer))
-  (.subscribe consumer ["quickstart-events"])
+  (.subscribe consumer ["turma-async"])
   (.subscription consumer)
 
   (def result (.poll consumer 1000))
   (def result-seq (seq result))
 
-  (def msg1 (last result-seq))
+  (def record (first result-seq))
+  (.key record)
+  (.value record)
+  (.offset record)
   (def new-record (-> (.poll consumer 1000)
                       seq
                       first))
