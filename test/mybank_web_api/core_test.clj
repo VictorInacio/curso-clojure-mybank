@@ -1,6 +1,6 @@
 (ns mybank-web-api.core-test
   (:require [clojure.test :refer [deftest testing is] :as test]
-            [mybank-web-api.devops.topic-replica :refer [build-consumer build-producer run-application consumer-subscribe]])
+            [mybank-web-api.devops.aula-3 :refer [build-consumer build-producer run-application consumer-subscribe]])
   (:import (org.testcontainers.containers KafkaContainer)
            (org.apache.kafka.clients.producer ProducerRecord)
            (org.testcontainers.utility DockerImageName)))
@@ -23,8 +23,8 @@
        records          (.poll test-consumer 10000)]
       (is (= producer-topic (.topic sent-result)))
       (doseq [record records]
-        (is (= (format "Processed Value: %s" input-data) (.value record)))))))
+        (is (= (format "ERRRRRR Processed Value: %s" input-data) (.value record)))))))
 
 
 (comment
-  (test/run-tests 'mybank-web-api.core-test))
+  (test/run-all-tests))

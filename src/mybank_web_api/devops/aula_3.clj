@@ -37,11 +37,12 @@
    :partition (.partition record)
    :timestamp (.timestamp record)})
 
+
 (defn search-topic-by-key
   "Searches through Kafka topic and returns those matching the key"
   [^KafkaConsumer consumer topic search-key]
   (let [topic-partitions (->> (.partitionsFor consumer topic)
-                              (map #(TopicPartition. (.topic %) (.partition %)),,,))
+                              (map #(TopicPartition. (.topic %) (.partition %))))
         _                (.assign consumer topic-partitions)
         _                (.seekToBeginning consumer (.assignment consumer))
         end-offsets      (.endOffsets consumer (.assignment consumer))
@@ -59,13 +60,27 @@
             (printf "Searched %s Found Matching Key %s Value %s \n" search-key key value)))))
     (persistent! found-records)))
 
+(comment
+  (def bootstrap-server "localhost:9092")
+  (def topic "example-consumer-topic")
+  (def consumer (build-consumer bootstrap-server))
+  (def partitionsForTopic (->> (.partitionsFor consumer topic)
+                               (map #(TopicPartition. (.topic %) (.partition %)))))
+  (.assign consumer partitionsForTopic)
+  (.subscription consumer)
+  (.seekToBeginning consumer (.assignment consumer))
+  (.endOffsets consumer (.assignment consumer))
+  (search-topic-by-key consumer topic "1")
+
+  )
+
 (defn build-consumer
   "Create the consumer instance to consume
 from the provided kafka topic name"
   [bootstrap-server]
   (let [consumer-props
         {"bootstrap.servers",  bootstrap-server
-         "group.id",           "example"
+         "group.id",           "example2"
          "key.deserializer",   StringDeserializer
          "value.deserializer", StringDeserializer
          "auto.offset.reset",  "earliest"
@@ -106,9 +121,54 @@ from the provided kafka topic name"
           (.send producer (ProducerRecord. producer-topic (.key record) (str "Processed Value: " (.value record))))))
       (.commitAsync consumer))))
 
+
+
+(defn run-application-key-selector
+  "Create the simple read and write topology with Kafka"
+  [bootstrap-server]
+  (let [consumer-topic     "generic-messages"
+        producer-topic-map {"client" "client-messages"
+                            "vendor" "vendor-messages"
+                            "infra"  "infra-messages"
+                            "error"  "error-messages"}
+        bootstrap-server   (env :bootstrap-server bootstrap-server)
+        consumer           (build-consumer bootstrap-server)
+        producer           (build-producer bootstrap-server)]
+    (create-topics! bootstrap-server (concat ["generic-messages"]
+                                             (vals producer-topic-map)) 1 1)
+    (consumer-subscribe consumer consumer-topic)
+    (while true
+      (println "pool ..." )
+      (let [records (.poll consumer (Duration/ofMillis 2000))]
+        (doseq [record records]
+          (println record)
+          (let [{:keys [key value offset]} (parse-consumer-record record)
+                output-topic (get producer-topic-map key "error-messages")]
+            (println "Found key ->" key " offset -> " offset)
+            (.send producer (ProducerRecord. output-topic key value)))))
+      (.commitAsync consumer))))
+
+
+(comment
+  (def bootstrap-server "localhost:9092")
+  (def key-app-future (future (run-application-key-selector bootstrap-server)))
+
+  (run-application-key-selector bootstrap-server)
+
+  (future-cancel key-app-future)
+
+
+  (def producer (build-producer bootstrap-server))
+  (def output-topic "generic-messages")
+  (.send producer (ProducerRecord. output-topic "client" "Client type event 222"))
+  (.send producer (ProducerRecord. output-topic "vendor" "VENDOR type event 222"))
+
+  )
+
 (comment
   (def fut-app (future (run-application "localhost:9092")))
 
+  (future-cancel fut-app)
 
 
   (def bootstrap-server "localhost:9092")
