@@ -22,7 +22,9 @@
                  [org.apache.logging.log4j/log4j-core "2.20.0"]
                  [org.testcontainers/testcontainers "1.15.3"]
                  [org.testcontainers/kafka "1.15.3"]
-                 [net.java.dev.jna/jna "5.7.0"]]
+                 [net.java.dev.jna/jna "5.7.0"]
+                 ;; Redis
+                 [com.taoensso/carmine "3.2.0"]]
   :main ^:skip-aot mybank-web-api.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot      :all

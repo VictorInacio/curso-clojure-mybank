@@ -122,6 +122,7 @@ from the provided kafka topic name"
       (.commitAsync consumer))))
 
 
+(def fut-app (future (run-application "localhost:9092")))
 
 (defn run-application-key-selector
   "Create the simple read and write topology with Kafka"
@@ -161,7 +162,7 @@ from the provided kafka topic name"
   (def producer (build-producer bootstrap-server))
   (def output-topic "generic-messages")
   (.send producer (ProducerRecord. output-topic "client" "Client type event 222"))
-  (.send producer (ProducerRecord. output-topic "vendor" "VENDOR type event 222"))
+  (.send producer (ProducerRecord. output-topic "vendor" "Vendor type event 222"))
 
   )
 
