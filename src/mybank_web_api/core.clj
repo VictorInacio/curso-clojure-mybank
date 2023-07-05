@@ -13,30 +13,23 @@
                        :2 {:saldo 200}
                        :3 {:saldo 300}}))
 
-(defn saldo-by-id_ [id-conta]
+(defn -saldo-by-id [id-conta]
   (println "saldo-by-id_: id-conta -> " id-conta)
-  (get @contas id-conta "conta inválida!"))
+  (-> @contas
+      (get id-conta "conta inválida!")
+      :saldo))
 
 (def saldo-by-id
-  (memo/memoize saldo-by-id_ :key (tkey "saldo-by-id") :expire 5000))
-
-(def dbg (atom nil))
+  (memo/memoize -saldo-by-id :key (tkey "saldo-by-id") :expire 60))
 
 (defn get-saldo [request]
-  (reset! dbg request)
-  (let [id-conta (-> request :path-params :id keyword)]
-    (println "id-conta ->" id-conta)
+  (let [id-conta (-> request :path-params :id keyword)
+        saldo    (saldo-by-id id-conta)]
+    (println "saldo ->" saldo)
     {:status 200
-     :body   {:result (saldo-by-id id-conta)}}))
+     :body   {:result saldo}}))
 
-(comment
-  (get-saldo {:path-params {:id "1"}})
-  (saldo-by-id_ :1)
 
-  (saldo-by-id :1)
-
-  (deref dbg)
-  )
 
 #_(defn get-saldo [request]
     (let [id-conta (-> request :path-params :id keyword)]
@@ -46,7 +39,11 @@
 (defn make-deposit [request]
   (let [id-conta       (-> request :path-params :id keyword)
         valor-deposito (-> request :body slurp parse-double)
-        _              (swap! contas (fn [m] (update-in m [id-conta :saldo] #(+ % valor-deposito))))]
+        _              (swap! contas (fn [m] (update-in m [id-conta :saldo] #(+ % valor-deposito))))
+        memo-key (str (tkey "saldo-by-id") ":(" id-conta ")")
+        del-return (memo/wcar* (car/del memo-key))]
+    (println "DEBUG memo-key" memo-key del-return)
+    ;; Cache invalidation
     {:status 200 :body {:id-conta   id-conta
                         :novo-saldo (id-conta @contas)}}))
 
@@ -92,5 +89,6 @@
   (test-request server :get "/saldo/4")
   (test-request server :get "/get-time-delay")
 
-  (test-post server :post "/deposito/2" "863.99")
+  (test-post server :post "/deposito/1" "59")
+  (test-post server :post "/deposito/1" "47")
   )
