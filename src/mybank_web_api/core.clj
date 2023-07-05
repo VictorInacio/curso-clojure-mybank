@@ -2,8 +2,12 @@
   (:require [io.pedestal.http :as http]
             [io.pedestal.http.route :as route]
             [io.pedestal.test :as test-http]
-            [mybank-web-api.devops.memoize-redis :as memo])
+            [mybank-web-api.devops.memoize-redis :as memo]
+            [taoensso.carmine :as car])
   (:gen-class))
+
+(def tkey (partial car/key :mybank :rest-api))
+
 
 (defonce contas (atom {:1 {:saldo 100}
                        :2 {:saldo 200}
@@ -14,7 +18,7 @@
   (get @contas id-conta "conta inválida!"))
 
 (def saldo-by-id
-  (memo/memoize saldo-by-id_ :key "saldo-by-id" :expire 5000))
+  (memo/memoize saldo-by-id_ :key (tkey "saldo-by-id") :expire 5000))
 
 (def dbg (atom nil))
 
@@ -35,9 +39,9 @@
   )
 
 #_(defn get-saldo [request]
-  (let [id-conta (-> request :path-params :id keyword)]
-    {:status 200
-     :body   {:result (id-conta @contas "conta inválida!")}}))
+    (let [id-conta (-> request :path-params :id keyword)]
+      {:status 200
+       :body   {:result (id-conta @contas "conta inválida!")}}))
 
 (defn make-deposit [request]
   (let [id-conta       (-> request :path-params :id keyword)
