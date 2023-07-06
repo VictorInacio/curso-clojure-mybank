@@ -89,7 +89,7 @@
   (fetch-url "http://www.google.com")
   (def memoized-fetch-url (redis/memoize fetch-url :key "urls" :expire 60))
 
-  (redis/with-redis pool spec
+  (wcar*
                     (memoized-add 1 1))
 
   (redis/with-redis pool spec
