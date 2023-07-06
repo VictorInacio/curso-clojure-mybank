@@ -14,9 +14,20 @@
 
 (def tkey (partial car/key :carmine :aula5))
 
+(wcar*
+  (car/set (tkey "minha-chave") "meu-valor")
+  )
+
+(wcar*
+  (car/keys "carmine*")
+  )
+
+(wcar*
+  )
+
 (defn clear-all-tkeys! []
   (when-let [ks (seq (wcar* (car/keys "*")))]
-    (wcar* (doseq [k ks] (car/del k)))))\
+    (wcar* (doseq [k ks] (car/del k)))))
 
 (comment
   (clear-all-tkeys!)
@@ -67,10 +78,9 @@
   (wcar* (car/zinterstore* k1-I-k2 [k1 k2]))
   )
 
-
-
 (comment
 
+  -23.56927292357946, -46.69214827409441
   "GEOHASH"
   -23.569329197791156, -46.69211850336745
   (wcar*
@@ -78,6 +88,14 @@
     (car/geoadd (tkey "geo-limits") 180, 85.05112878 "Max")
 
     )
+
+  (wcar*
+    (car/geohash (tkey "geo-limits") "Min"))
+
+  (wcar*
+    (car/geopos (tkey "geo-limits") "Min"))
+
+
   (wcar*
     (car/geoadd (tkey "geo-limits") -180, -85.05112878 "Min")
     (car/geoadd (tkey "geo-limits") 180, 85.05112878 "Max"))
@@ -88,15 +106,29 @@
 
   -23.57341381051909, -46.68944837206117
   -23.57342794617073, -46.68948122912088
+
+  -23.569323716677953, -46.69213716824749
   (wcar*
     (car/geoadd (tkey "locations") -23.56929876722052, -46.69214033719587 "Ada Office")
     (car/geoadd (tkey "locations") -23.5734476869011, -46.68903598417748 "Padoca")
+    (car/geoadd (tkey "locations") -23.561227070460994, -46.655849736622436 "Luis")
+    (car/geoadd (tkey "locations") -23.599311191983645, -46.60969577430707 "Thais")
+    (car/geoadd (tkey "locations") -23.00443381358353, -43.441004287819176 "Yasmin"))
+
+  (wcar*
     (car/geoadd (tkey "locations") -3.7365656467504276, -38.49345327138544 "Atila")
     (car/geoadd (tkey "locations") -23.4929039, -46.6349667 "Beatriz")
     (car/geoadd (tkey "locations") -23.495049409889038, -47.47281641905198 "Larissa")
-    (car/geoadd (tkey "locations") -30.0688382,-51.1230311 "Jade")
+    (car/geoadd (tkey "locations") -30.0688382, -51.1230311 "Jade")
     (car/geoadd (tkey "locations") -23.61580305902972, -46.72017559138181 "Lucas")
     (car/geoadd (tkey "locations") -22.957714, -43.192266 "Gabriele"))
+
+  (wcar*
+    (car/geoadd (tkey "locations") -23.56929876722052, -46.69214033719587 "Ada Office")
+    (car/geoadd (tkey "locations") -23.5734476869011, -46.68903598417748 "Padoca")
+    (car/geoadd (tkey "locations") -25.392329469334275, -49.26315141241646 "Maria")
+    (car/geoadd (tkey "locations") -22.412113556404698, -45.44984334507146 "Luísa")
+    (car/geoadd (tkey "locations") -19.893575283961713, -43.930615226056155 "Thaís"))
 
   (wcar*
     (car/geohash (tkey "locations") "Ada Office"))
@@ -131,11 +163,6 @@
   (wcar*
     (car/geosearch (tkey "locations") "FROMLONLAT" -23.571271096228035, -46.69073797395948 "BYRADIUS" 5 "km" "WITHDIST"))
 
-
-  (wcar*
-    (car/geosearch (tkey "locations") "FROMLONLAT" -23.568079581529727, -46.693126324649555 "BYRADIUS" 5 "km" "WITHDIST"))
-
-
   (wcar*
     (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYRADIUS" 5 "km" "WITHDIST"))
 
@@ -146,16 +173,14 @@
   (wcar*
     (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYRADIUS" 150 "km" "WITHDIST"))
 
- (wcar*
-    (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYRADIUS" 1500 "km" "WITHDIST"))
+  (wcar*
+    (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYRADIUS" 500 "km" "WITHDIST" "WITHCOORD"))
 
-(wcar*
+  (wcar*
     (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYRADIUS" 3000 "km" "WITHDIST"))
-
 
   (wcar*
     (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYRADIUS" 3000 "km" "WITHDIST" "WITHCOORD"))
-
 
   (wcar*
     (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYRADIUS" 3000 "km" "WITHDIST" "ASC"))
@@ -163,17 +188,14 @@
   (wcar*
     (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYRADIUS" 3000 "km" "WITHDIST" "DESC"))
 
- (wcar*
+  (wcar*
     (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYRADIUS" 3000 "km" "WITHDIST" "DESC" "COUNT" 3))
 
-(wcar*
-    (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYBOX" 1000 1000 "km" "WITHDIST" "DESC" "COUNT" 3))
+  (wcar*
+    (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYRADIUS" 3000 "km" "WITHDIST" "ASC" "COUNT" 3))
 
-(wcar*
-    (car/geosearchstore (tkey "found-members") (tkey "locations") "FROMMEMBER" "Ada Office" "BYBOX" 1000 1000 "km"  "DESC" "COUNT" 3))
+  (wcar*
+    (car/geosearch (tkey "locations") "FROMMEMBER" "Ada Office" "BYBOX" 10 10 "km" "WITHDIST" "WITHHASH" "ASC" "COUNT" 3))
 
-
-  )
-
-
-
+  (wcar*
+    (car/geosearchstore (tkey "found-members") (tkey "locations") "FROMMEMBER" "Ada Office" "BYBOX" 1000 1000 "km" "DESC" "COUNT" 3)))

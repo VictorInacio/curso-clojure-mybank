@@ -98,9 +98,5 @@
   (redis/with-redis pool spec
                     (time (memoized-fetch-url "https://www.google.com"))
                     (time (memoized-fetch-url "https://www.google.com")))
-
-
   (time (+ 1 1))
-  (time (+ 1 1))
-
-  )
+  (time (+ 1 1)))
