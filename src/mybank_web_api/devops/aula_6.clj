@@ -23,18 +23,14 @@
 
 (def dbg (atom nil))
 
-(comment
-  (deref dbg)
-  )
-(defn rate-limit-interceptor [max-requests]
+(defn rate-limit-interceptor [max-requests seconds-window]
   {:name  :rate-limiting
    :enter (fn [context]
-            (reset! dbg context)
             (let [remote-addr (get-in context [:request :remote-addr])
-                  redis-key  (tkey "rate-limit-counter" remote-addr)
+                  redis-key   (tkey "rate-limit-counter" remote-addr)
                   [remaining-requests] (wcar* (redis/incr redis-key)
-                                              (redis/expire redis-key 5 "LT"))
-                  expiration (wcar* (redis/ttl redis-key))]
+                                              (redis/expire redis-key seconds-window "LT"))
+                  expiration  (wcar* (redis/ttl redis-key))]
               (println "Remaining Requests" (str remaining-requests))
               (println "Retry-After ttl" (str expiration))
               (if (<= remaining-requests max-requests)
@@ -46,16 +42,68 @@
                      :body    "Rate limit exceeded."
                      :headers {"Retry-After" (str expiration)}})))))})
 
-
 (def test
   (i/interceptor
     {:name  ::test
      :enter (fn [context]
               (assoc context :response {:body   "API respondendo!"
                                         :status 200}))}))
+(defonce user-credentials {:1 "123"
+                           :2 "123"
+                           :3 "123"})
+(def login
+  (i/interceptor
+    {:name  ::login
+     :enter (fn [context]
+              (let [request       (get context :request)
+                    user-id       (-> request :path-params :id keyword)
+                    sent-password (-> request :body slurp str)
+                    user-password (get user-credentials user-id)
+                    authorized?   (= sent-password user-password)]
+                (println "user-key -> " user-id)
+                (println "sent-password -> " sent-password)
+                (println "user-password -> " user-password)
+                (if authorized?
+                  (let [session-id     (str (random-uuid))
+                        user-key       (tkey "user-session" user-id)
+                        redis-response (wcar* (redis/set user-key session-id)
+                                              (redis/expire user-key (* 60 60) "LT"))]
+                    (println "Session created ->" session-id)
+                    (assoc context :response
+                                   {:status 200 :body (str session-id)}))
+                  (chain/terminate
+                    (assoc context
+                      :response
+                      {:status 401
+                       :body   "Usuário ou senha inválido."})))))}))
+
+(def session
+  (i/interceptor
+    {:name  ::login
+     :enter (fn [context]
+              (let [request        (get context :request)
+                    user-id        (-> request :path-params :id keyword)
+                    user-key       (tkey "user-session" user-id)
+                    sent-session   (-> request :body slurp str)
+                    session-state  (wcar* (redis/get user-key))
+                    authenticated? (= sent-session session-state)]
+                (println "user-key -> " user-key)
+                (println "sent-session -> " sent-session)
+                (println "session-state -> " session-state)
+                (if authenticated?
+                  (assoc context :session session-state)
+                  (chain/terminate
+                    (assoc context
+                      :response
+                      {:status 401
+                       :body   "Acesso não authorizado."})))))}))
+
+
 
 (def routes
-  #{["/test" :get [(rate-limit-interceptor 3) test]]})
+  #{["/test" :get [(rate-limit-interceptor 3 5) test] :route-name :test]
+    ["/login/:id" :post [login] :route-name :login]
+    ["/auth-test/:id" :post [session test] :route-name :auth-test]})
 
 (defn create-server []
   (http/create-server
@@ -72,8 +120,13 @@
 (defn test-request [server verb url]
   (test-http/response-for (::http/service-fn @server) verb url))
 
+(defn test-post [server verb url body]
+  (test-http/response-for (::http/service-fn @server) verb url :body body))
+
 (comment
   (start)
   (http/stop @server)
   (test-request server :get "/test")
+  (test-post server :post "/login/1" "123")
+  (test-post server :post "/auth-test/1" "35ac6577-2048-4b21-92b9-86a2eda57524")
   )
