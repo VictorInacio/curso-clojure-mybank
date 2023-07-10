@@ -85,16 +85,13 @@
   -23.569329197791156, -46.69211850336745
   (wcar*
     (car/geoadd (tkey "geo-limits") -180, -85.05112878 "Min")
-    (car/geoadd (tkey "geo-limits") 180, 85.05112878 "Max")
-
-    )
+    (car/geoadd (tkey "geo-limits") 180, 85.05112878 "Max"))
 
   (wcar*
     (car/geohash (tkey "geo-limits") "Min"))
 
   (wcar*
     (car/geopos (tkey "geo-limits") "Min"))
-
 
   (wcar*
     (car/geoadd (tkey "geo-limits") -180, -85.05112878 "Min")
@@ -103,11 +100,6 @@
   (wcar*
     (car/zrem (tkey "geo-limits") "Max"))
 
-
-  -23.57341381051909, -46.68944837206117
-  -23.57342794617073, -46.68948122912088
-
-  -23.569323716677953, -46.69213716824749
   (wcar*
     (car/geoadd (tkey "locations") -23.56929876722052, -46.69214033719587 "Ada Office")
     (car/geoadd (tkey "locations") -23.5734476869011, -46.68903598417748 "Padoca")
