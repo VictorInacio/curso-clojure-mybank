@@ -21,17 +21,23 @@
 ;; Rate Limiting
 (def tkey (partial redis/key :mybank :aula6 :rate-limit))
 
+(def dbg (atom nil))
 
+(comment
+  (deref dbg)
+  )
 (defn rate-limit-interceptor [max-requests]
   {:name  :rate-limiting
    :enter (fn [context]
-            (let [redis-key  (tkey "rate-limit-counter")
+            (reset! dbg context)
+            (let [remote-addr (get-in context [:request :remote-addr])
+                  redis-key  (tkey "rate-limit-counter" remote-addr)
                   [remaining-requests] (wcar* (redis/incr redis-key)
                                               (redis/expire redis-key 5 "LT"))
                   expiration (wcar* (redis/ttl redis-key))]
               (println "Remaining Requests" (str remaining-requests))
               (println "Retry-After ttl" (str expiration))
-              (if (and (<= remaining-requests max-requests) #_(pos? expiration))
+              (if (<= remaining-requests max-requests)
                 context
                 (chain/terminate
                   (assoc context
