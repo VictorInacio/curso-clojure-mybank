@@ -26,7 +26,7 @@
 (comment
   (deref dbg)
   )
-(defn rate-limit-interceptor [max-requests]
+(defn rate-limit-interceptor [max-requests ]
   {:name  :rate-limiting
    :enter (fn [context]
             (reset! dbg context)
@@ -47,15 +47,79 @@
                      :headers {"Retry-After" (str expiration)}})))))})
 
 
+(def dbg (atom nil))
+
+(comment
+  (-> (deref dbg)
+      keys
+      ;:session
+      ;:request
+      ;:route
+      :io.pedestal.interceptor.chain/queue
+      ))
 (def test
   (i/interceptor
     {:name  ::test
      :enter (fn [context]
+              (reset! dbg context)
               (assoc context :response {:body   "API respondendo!"
                                         :status 200}))}))
 
+(defonce user-credentials {:1 "123"
+                           :2 "123"
+                           :3 "123"})
+(def login
+  (i/interceptor
+    {:name  ::login
+     :enter (fn [context]
+              (let [request       (get context :request)
+                    user-id       (-> request :path-params :id keyword)
+                    sent-password (-> request :body slurp str)
+                    user-password (get user-credentials user-id)
+                    authorized?   (= sent-password user-password)]
+                (println "user-key -> " user-id)
+                (println "sent-password -> " sent-password)
+                (println "user-password -> " user-password)
+                (if authorized?
+                  (let [session-id     (str (random-uuid))
+                        user-key       (tkey "user-session" user-id)
+                        redis-response (wcar* (redis/set user-key session-id)
+                                              (redis/expire user-key (* 60 60) "LT"))]
+                    (println "Session created ->" session-id)
+                    (assoc context :response
+                                   {:status 200 :body (str session-id)}))
+                  (chain/terminate
+                    (assoc context
+                      :response
+                      {:status 401
+                       :body   "Usuário ou senha inválido."})))))}))
+
+(def session
+  (i/interceptor
+    {:name  ::session
+     :enter (fn [context]
+              (let [request        (get context :request)
+                    user-id        (-> request :path-params :id keyword)
+                    user-key       (tkey "user-session" user-id)
+                    sent-session   (-> request :body slurp str)
+                    session-state  (wcar* (redis/get user-key))
+                    authenticated? (= sent-session session-state)]
+                (println "user-key -> " user-key)
+                (println "sent-session -> " sent-session)
+                (println "session-state -> " session-state)
+                (if authenticated?
+                  (assoc context :session session-state)
+                  (chain/terminate
+                    (assoc context
+                      :response
+                      {:status 401
+                       :body   "Acesso não authorizado."})))))}))
+
+
 (def routes
-  #{["/test" :get [(rate-limit-interceptor 3) test]]})
+  #{["/test" :get [(rate-limit-interceptor 3) test] :route-name :test]
+    ["/login/:id" :post [login] :route-name :login]
+    ["/auth-test/:id" :post [session test] :route-name :auth-test]})
 
 (defn create-server []
   (http/create-server
@@ -76,4 +140,21 @@
   (start)
   (http/stop @server)
   (test-request server :get "/test")
+
+
+  )
+
+(defn test-post [server verb url body]
+  (test-http/response-for (::http/service-fn @server) verb url :body body))
+
+(comment
+  (start)
+  (http/stop @server)
+  (test-request server :get "/test")
+  (test-post server :post "/login/1" "123")
+  (test-post server :post "/login/2" "123")
+  (test-post server :post "/auth-test/1" "0242e54e-5698-4a9c-a183-563f9f263d51")
+  (test-post server :post "/auth-test/1" "0242e54e-5698-4b9c-a183-563f9f263d51")
+  (test-post server :post "/auth-test/2" "40a4c2bb-14e0-408a-b3df-391b58cdf346")
+  (test-post server :post "/auth-test/2" "40a4c2bb-14e0-408b-b3df-391b58cdf346")
   )
