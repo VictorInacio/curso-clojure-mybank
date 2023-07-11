@@ -48,6 +48,8 @@
      :enter (fn [context]
               (assoc context :response {:body   "API respondendo!"
                                         :status 200}))}))
+
+
 (defonce user-credentials {:1 "123"
                            :2 "123"
                            :3 "123"})
@@ -103,7 +105,7 @@
 (def routes
   #{["/test" :get [(rate-limit-interceptor 3 5) test] :route-name :test]
     ["/login/:id" :post [login] :route-name :login]
-    ["/auth-test/:id" :post [session test] :route-name :auth-test]})
+    ["/auth-test/:id" :post [(rate-limit-interceptor 3 5) session test] :route-name :auth-test]})
 
 (defn create-server []
   (http/create-server
@@ -115,6 +117,7 @@
 (defonce server (atom nil))
 
 (defn start []
+
   (reset! server (http/start (create-server))))
 
 (defn test-request [server verb url]
@@ -128,5 +131,6 @@
   (http/stop @server)
   (test-request server :get "/test")
   (test-post server :post "/login/1" "123")
-  (test-post server :post "/auth-test/1" "35ac6577-2048-4b21-92b9-86a2eda57524")
+  (test-post server :post "/auth-test/1" "8a7a3e3b-c703-431c-a08a-44fb143e4b03")
+  (test-post server :post "/auth-test/1" "8B7a3e3b-c703-431c-a08a-44fb143e4b03")
   )
