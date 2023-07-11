@@ -132,5 +132,12 @@
   (test-request server :get "/test")
   (test-post server :post "/login/1" "123")
   (test-post server :post "/auth-test/1" "8a7a3e3b-c703-431c-a08a-44fb143e4b03")
-  (test-post server :post "/auth-test/1" "8B7a3e3b-c703-431c-a08a-44fb143e4b03")
-  )
+  (test-post server :post "/auth-test/1" "8B7a3e3b-c703-431c-a08a-44fb143e4b03"))
+"
+Alterar o session para:
+Uso do redis para guardar usuários, inicialização da key deve ser junto com start do serviço.
+Permitir configurar tempo de duração da sessão de acordo com tipo de usuário (‘admin’ 12 horas ou ‘regular’ 3 horas)
+Implementar endpoints de criação de usuário temporário.
+Receber usuário em um endpoint e senha em outro (adicionar no redis com expiração de 3 minutos).
+Testar sessão com o usuário criado.
+"
