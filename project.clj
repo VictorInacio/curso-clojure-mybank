@@ -24,7 +24,15 @@
                  [org.testcontainers/kafka "1.15.3"]
                  [net.java.dev.jna/jna "5.7.0"]
                  ;; Redis
-                 [com.taoensso/carmine "3.2.0"]]
+                 [com.taoensso/carmine "3.2.0"]
+
+                 ;;MinIO
+                 [minio-clj "0.2.2"]
+
+                 [com.amazonaws/aws-java-sdk-s3 "1.12.220"
+                  :exclusions [com.fasterxml.jackson.dataformat/jackson-dataformat-cbor
+                               commons-logging]]
+                 ]
   :main ^:skip-aot mybank-web-api.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot      :all
