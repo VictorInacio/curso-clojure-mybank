@@ -32,8 +32,12 @@
                  [com.amazonaws/aws-java-sdk-s3 "1.12.220"
                   :exclusions [com.fasterxml.jackson.dataformat/jackson-dataformat-cbor
                                commons-logging]]
-                 ]
-  :main ^:skip-aot mybank-web-api.core
+
+                 [org.clojure/data.csv "1.0.1"]
+                 [org.postgresql/postgresql "42.2.23"]
+                 [org.clojure/java.jdbc "0.7.12"]
+
+                 :main] ^:skip-aot mybank-web-api.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot      :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
