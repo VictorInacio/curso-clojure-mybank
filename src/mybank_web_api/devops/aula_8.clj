@@ -35,14 +35,21 @@
   (let [header (->> data-lines
                     first
                     keys
-                    (map name))]
+                    (map name)
+                    vec)]
     (concat [header] (for [line data-lines]
                        (vec (vals line))))))
 
 (comment
 
+  (->> payment-facts
+       first
+       keys
+       (map name))
+
   (generate-table-csv payment-facts)
 
+  (write-csv payment-facts (data-path "payments_map.csv"))
   (write-csv payment-facts (data-path "payments_map.csv"))
   (write-csv (generate-table-csv payment-facts) (data-path "fact_table.csv"))
   (write-csv (generate-table-csv customer-dimensions) (data-path "customer_table.csv"))
@@ -70,6 +77,9 @@
      :type       (rand-nth ["Account" "Card" "Loan"])
      :currency   (rand-nth ["USD" "EUR" "GBP"])})
 
+  (generate-payment-fact)
+  (generate-customer-dimension)
+  (generate-product-dimension)
 
   ;; Fact table generation function
 
@@ -99,7 +109,7 @@
 
   ;; Upload
   (def conn (minio/connect "http://127.0.0.1:9000"
-                           "minioadmin""minioadmin"))
+                           "minioadmin" "minioadmin"))
   (def bucket-name "aula-8-etl")
   (minio/make-bucket conn bucket-name)
   (minio/put-object conn bucket-name (data-path "fact_table.csv") (data-path "fact_table.csv"))
