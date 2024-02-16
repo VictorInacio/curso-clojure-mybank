@@ -37,7 +37,10 @@
                  [org.postgresql/postgresql "42.2.23"]
                  [org.clojure/java.jdbc "0.7.12"]
 
-                 :main] ^:skip-aot mybank-web-api.core
+                 ;; MATH and Data Science
+                 [incanter/incanter "1.9.3"]
+                 ]
+  :main ^:skip-aot mybank-web-api.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot      :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
